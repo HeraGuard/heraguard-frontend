@@ -112,20 +112,19 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response != null && response.data is Map) {
         final data = response.data as Map<String, dynamic>;
         errorMessage = data['message'] ?? 'Error sin mensaje';
+        if (errorMessage.contains('credenciales') ||
+                errorMessage.contains('invalid credentials')) {
+              errorMessage = 'Email o contraseña incorrectos';
+            } else if (errorMessage.contains('email')) {
+              errorMessage = 'Formato de email inválido';
+            } else if (errorMessage.contains('password')) {
+              errorMessage = 'Contraseña inválida';
+            }
+        //   case 429:
+        //     errorMessage = 'Demasiados intentos. Intenta más tarde';
+        //     break;
       } else {
-        switch (response?.statusCode) {
-          case 400:
-            errorMessage = 'Datos de entrada inválidos';
-            break;
-          case 401:
-            errorMessage = 'Email o contraseña incorrectos';
-            break;
-          case 404:
-            errorMessage = 'Usuario no encontrado';
-            break;
-          default:
-            errorMessage = 'Error de conexión';
-        }
+        errorMessage = 'Error de conexión';
       }
     }
     ScaffoldMessenger.of(context).showSnackBar(

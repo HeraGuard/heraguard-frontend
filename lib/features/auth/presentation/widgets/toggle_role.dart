@@ -27,7 +27,7 @@ class ToggleRole extends StatelessWidget {
         ToggleButtons(
           isSelected: [
             selectedRole == 'adulto_mayor',
-            selectedRole == 'familiar',
+            selectedRole == 'cuidador',
             selectedRole == 'doctor',
           ],
           onPressed: (int index) {
@@ -37,7 +37,7 @@ class ToggleRole extends StatelessWidget {
                 newRole = 'adulto_mayor';
                 break;
               case 1:
-                newRole = 'familiar';
+                newRole = 'cuidador';
                 break;
               case 2:
                 newRole = 'doctor';
@@ -63,7 +63,7 @@ class ToggleRole extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Text(
-                'Familiar/Cuidador',
+                'Cuidador',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               ),
             ),
