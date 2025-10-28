@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/constants/role_config.dart';
+import 'package:heraguard_frontend/core/models/user_role.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 
 class RouteUtils {
@@ -18,8 +20,12 @@ class RouteUtils {
     Navigator.pop(context);
   }
 
-  // Navegación por rol
   static void goToHomeByRole(BuildContext context, String role) {
-    goToLogin(context);
+    final homeRoute = RoleConfig.getHomeRoute(role);
+    Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false);
+  }
+
+  static List<AppRoute> getRoutesForRole(String role) {
+    return RoleConfig.getRoutesForRole(role);
   }
 }
