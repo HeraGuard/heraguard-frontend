@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-      RouteUtils.goToRegister(context);
+      RouteUtils.goToHomeByRole(context, response.user.role);
 
       _emailController.clear();
       _passwordController.clear();
@@ -113,13 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
         final data = response.data as Map<String, dynamic>;
         errorMessage = data['message'] ?? 'Error sin mensaje';
         if (errorMessage.contains('credenciales') ||
-                errorMessage.contains('invalid credentials')) {
-              errorMessage = 'Email o contraseña incorrectos';
-            } else if (errorMessage.contains('email')) {
-              errorMessage = 'Formato de email inválido';
-            } else if (errorMessage.contains('password')) {
-              errorMessage = 'Contraseña inválida';
-            }
+            errorMessage.contains('invalid credentials')) {
+          errorMessage = 'Email o contraseña incorrectos';
+        } else if (errorMessage.contains('email')) {
+          errorMessage = 'Formato de email inválido';
+        } else if (errorMessage.contains('password')) {
+          errorMessage = 'Contraseña inválida';
+        }
         //   case 429:
         //     errorMessage = 'Demasiados intentos. Intenta más tarde';
         //     break;

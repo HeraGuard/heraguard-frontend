@@ -124,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
 
-      RouteUtils.goToLogin(context);
+      RouteUtils.goToHomeByRole(context, response.user.role);
 
       _nameController.clear();
       _lastNameController.clear();
