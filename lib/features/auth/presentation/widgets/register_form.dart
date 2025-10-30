@@ -19,9 +19,6 @@ class RegisterForm extends StatelessWidget {
   final ValueChanged<String>? onEmailChanged;
   final ValueChanged<String>? onPasswordChanged;
   final ValueChanged<String>? onConfirmPasswordChanged;
-  final String? emailError;
-  final String? passwordError;
-  final String? confirmPasswordError;
 
   const RegisterForm({
     super.key,
@@ -41,9 +38,6 @@ class RegisterForm extends StatelessWidget {
     this.onLastNameChanged,
     required this.nameController,
     required this.lastNameController,
-    this.emailError,
-    this.passwordError,
-    this.confirmPasswordError,
   });
 
   @override
@@ -80,7 +74,6 @@ class RegisterForm extends StatelessWidget {
               icon: Icons.email_outlined,
               keyboardType: TextInputType.emailAddress,
               onChanged: onEmailChanged,
-              errorText: emailError,
             ),
 
             const SizedBox(height: 16),
@@ -91,7 +84,6 @@ class RegisterForm extends StatelessWidget {
               icon: Icons.lock_outline,
               obscureText: obscurePassword,
               onChanged: onPasswordChanged,
-              errorText: passwordError,
               suffixIcon: Icon(
                 obscurePassword ? Icons.visibility_off : Icons.visibility,
               ),
@@ -108,7 +100,6 @@ class RegisterForm extends StatelessWidget {
               icon: Icons.lock_outline,
               obscureText: obscureConfirmPassword,
               onChanged: onConfirmPasswordChanged,
-              errorText: confirmPasswordError,
               suffixIcon: Icon(
                 obscureConfirmPassword
                     ? Icons.visibility_off
