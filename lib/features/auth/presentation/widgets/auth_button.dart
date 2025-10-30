@@ -30,7 +30,7 @@ class AuthButton extends StatelessWidget {
           elevation: 2,
         ),
         child: isLoading
-            ? const Row(
+            ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
@@ -43,13 +43,15 @@ class AuthButton extends StatelessWidget {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    'Iniciando sesión...',
+                    title.contains('Iniciar')
+                        ? 'Iniciando sesión...'
+                        : 'Creando cuenta...',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
               )
-            : const Text(
-                'Iniciar Sesión',
+            : Text(
+                title,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
       ),
