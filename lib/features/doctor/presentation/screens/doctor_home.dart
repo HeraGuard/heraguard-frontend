@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/widgets/appbar_widget.dart';
+import 'package:heraguard_frontend/core/widgets/card_home.dart';
 
 class DoctorHome extends StatelessWidget {
   const DoctorHome({super.key});
@@ -6,11 +8,27 @@ class DoctorHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text("Home del doctor")],
-        ),
+      appBar: AppbarWidget(title: "HeraGuard"),
+      body: Column(
+        children: [
+          CardHome(
+            title: 'Agendar Cita',
+            imagePath: 'assets/images/cita_medica.jpg',
+            onTap: () {},
+          ),
+          const SizedBox(height: 10),
+          CardHome(
+            title: 'Recetar Medicamento',
+            imagePath: 'assets/images/tomar_medicamento.jpg',
+            onTap: () {},
+          ),
+          const SizedBox(height: 10),
+          CardHome(
+            title: 'Programar Actividad',
+            imagePath: 'assets/images/actividad.png',
+            onTap: () {},
+          ),
+        ],
       ),
     );
   }
