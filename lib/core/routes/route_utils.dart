@@ -11,7 +11,7 @@ class RouteUtils {
   }
 
   static void goToRegister(BuildContext context) {
-    Navigator.pushReplacementNamed(context, AppRoutes.register);
+    Navigator.pushNamed(context, AppRoutes.register);
   }
 
   static void goBack(BuildContext context) {
