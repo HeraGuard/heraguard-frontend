@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/routes/route_generator.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const AppProvider());
+}
+
+class AppProvider extends StatelessWidget {
+  const AppProvider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+      child: const MyApp(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
