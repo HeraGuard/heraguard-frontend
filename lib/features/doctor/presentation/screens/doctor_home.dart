@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/extensions/auth_context.dart';
 import 'package:heraguard_frontend/core/widgets/appbar_widget.dart';
 import 'package:heraguard_frontend/core/widgets/card_home.dart';
 
@@ -7,6 +8,13 @@ class DoctorHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //final authData = context.authData;
+    final userRole = context.userRole;
+    print('Rol del usuario: ${userRole.role}');
+    print('Rutas:');
+    for (final route in userRole.routes) {
+      print('${route.name} -> ${route.path}');
+    }
     return Scaffold(
       appBar: AppbarWidget(title: "HeraGuard"),
       body: Column(
