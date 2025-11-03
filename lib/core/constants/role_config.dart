@@ -12,7 +12,10 @@ class RoleConfig {
     ),
     'doctor': UserRole(
       role: 'doctor',
-      routes: [AppRoute(name: 'home', path: '/doctor-home')],
+      routes: [
+        AppRoute(name: 'home', path: '/doctor-home'),
+        AppRoute(name: 'chats', path: '/doctor-chats'),
+      ],
     ),
   };
 

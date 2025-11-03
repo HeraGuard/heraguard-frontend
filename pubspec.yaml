@@ -37,6 +37,7 @@ dependencies:
   supabase_flutter: ^2.10.3
   dio: ^5.9.0
   pretty_dio_logger: ^1.4.0
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:

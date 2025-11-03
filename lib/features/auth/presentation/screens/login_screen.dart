@@ -2,12 +2,14 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/route_utils.dart';
 import 'package:heraguard_frontend/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/auth_header.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/login_form.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/auth_link.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/auth_button.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -76,6 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
+
+      context.read<AuthProvider>().setAuthData(response);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

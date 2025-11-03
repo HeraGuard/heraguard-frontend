@@ -3,6 +3,7 @@ import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/login_screen.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/register_screen.dart';
 import 'package:heraguard_frontend/features/caregiver/presentation/screens/caregiver_home.dart';
+import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_chats.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_home.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_home.dart';
 
@@ -19,6 +20,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const CaregiverHome());
       case AppRoutes.doctorHome:
         return MaterialPageRoute(builder: (_) => const DoctorHome());
+      case AppRoutes.doctorChats:
+        return MaterialPageRoute(builder: (_) => const DoctorChats());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }
