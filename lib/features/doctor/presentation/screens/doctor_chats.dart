@@ -5,6 +5,13 @@ class DoctorChats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Column(children: [Text('Chats del doc')]));
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text('Chats del doc')],
+        ),
+      ),
+    );
   }
 }

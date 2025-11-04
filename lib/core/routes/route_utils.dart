@@ -5,11 +5,7 @@ import 'package:heraguard_frontend/core/routes/app_routes.dart';
 
 class RouteUtils {
   static void goToLogin(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRoutes.login,
-      (route) => false,
-    );
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 
   static void goToRegister(BuildContext context) {
@@ -27,5 +23,15 @@ class RouteUtils {
 
   static List<AppRoute> getRoutesForRole(String role) {
     return RoleConfig.getRoutesForRole(role);
+  }
+
+  static void navigateToRoute(
+    BuildContext context,
+    String routeName,
+    String userRole,
+  ) {
+    final routes = RoleConfig.getRoutesForRole(userRole);
+    final route = routes.firstWhere((r) => r.name == routeName);
+    Navigator.pushNamed(context, route.path);
   }
 }
