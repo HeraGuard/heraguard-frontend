@@ -10,4 +10,7 @@ class AppRoutes {
 
   // Doctor
   static const String doctorChats = '/doctor-chats';
+
+  // All
+  static const String addMedication = 'add-medication';
 }
