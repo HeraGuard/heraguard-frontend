@@ -1,10 +1,12 @@
 import 'package:heraguard_frontend/core/network/api_client.dart';
 import 'package:heraguard_frontend/core/network/endpoints.dart';
 import 'package:heraguard_frontend/features/auth/data/models/auth_response.dart';
+import 'package:heraguard_frontend/features/auth/domain/repositories/auth_repository.dart';
 
-class AuthRepositoryImpl {
+class AuthRepositoryImpl implements AuthRepository {
   final ApiClient _apiClient = ApiClient();
 
+  @override
   Future<AuthResponse> login(String email, String password) async {
     final response = await _apiClient.post(Endpoints.login, {
       'email': email,
@@ -14,6 +16,7 @@ class AuthRepositoryImpl {
     return AuthResponse.fromJson(response.data);
   }
   
+  @override
   Future<AuthResponse> register(
     String name,
     String lastName,
