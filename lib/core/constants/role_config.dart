@@ -4,17 +4,24 @@ class RoleConfig {
   static final Map<String, UserRole> roles = {
     'adulto_mayor': UserRole(
       role: 'adulto_mayor',
-      routes: [AppRoute(name: 'home', path: '/elder-home')],
+      routes: [
+        AppRoute(name: 'home', path: '/elder-home'),
+        AppRoute(name: 'addMedication', path: 'add-medication'),
+      ],
     ),
     'cuidador': UserRole(
       role: 'cuidador',
-      routes: [AppRoute(name: 'home', path: '/caregiver-home')],
+      routes: [
+        AppRoute(name: 'home', path: '/caregiver-home'),
+        AppRoute(name: 'addMedication', path: 'add-medication'),
+      ],
     ),
     'doctor': UserRole(
       role: 'doctor',
       routes: [
         AppRoute(name: 'home', path: '/doctor-home'),
         AppRoute(name: 'chats', path: '/doctor-chats'),
+        AppRoute(name: 'addMedication', path: 'add-medication'),
       ],
     ),
   };

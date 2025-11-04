@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
+import 'package:heraguard_frontend/core/screens/add_medication.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/login_screen.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/register_screen.dart';
 import 'package:heraguard_frontend/features/caregiver/presentation/screens/caregiver_home.dart';
@@ -22,6 +23,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const DoctorHome());
       case AppRoutes.doctorChats:
         return MaterialPageRoute(builder: (_) => const DoctorChats());
+      case AppRoutes.addMedication:
+        return MaterialPageRoute(builder: (_) => const AddMedicationScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }
