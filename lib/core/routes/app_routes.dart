@@ -13,4 +13,5 @@ class AppRoutes {
 
   // All
   static const String addMedication = 'add-medication';
+  static const String addActivity = 'add-activity';
 }

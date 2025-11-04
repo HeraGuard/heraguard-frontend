@@ -7,6 +7,7 @@ class RoleConfig {
       routes: [
         AppRoute(name: 'home', path: '/elder-home'),
         AppRoute(name: 'addMedication', path: 'add-medication'),
+        AppRoute(name: 'addActivity', path: 'add-activity'),
       ],
     ),
     'cuidador': UserRole(
@@ -14,6 +15,7 @@ class RoleConfig {
       routes: [
         AppRoute(name: 'home', path: '/caregiver-home'),
         AppRoute(name: 'addMedication', path: 'add-medication'),
+        AppRoute(name: 'addActivity', path: 'add-activity'),
       ],
     ),
     'doctor': UserRole(
@@ -22,6 +24,7 @@ class RoleConfig {
         AppRoute(name: 'home', path: '/doctor-home'),
         AppRoute(name: 'chats', path: '/doctor-chats'),
         AppRoute(name: 'addMedication', path: 'add-medication'),
+        AppRoute(name: 'addActivity', path: 'add-activity'),
       ],
     ),
   };
