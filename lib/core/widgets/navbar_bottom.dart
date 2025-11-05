@@ -17,6 +17,14 @@ class _NavbarBottomState extends State<NavbarBottom> {
     final appProvider = context.watch<AppProvider>();
     final navRoutes = RoleConfig.getNavBarRoutes(context.userRole.role);
 
+    if (navRoutes.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    if (navRoutes.length < 2) {
+      return SizedBox.shrink();
+    }
+
     return BottomNavigationBar(
       currentIndex: appProvider.currentNavIndex,
       items: navRoutes

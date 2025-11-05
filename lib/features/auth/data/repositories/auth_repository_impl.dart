@@ -35,6 +35,11 @@ class AuthRepositoryImpl implements AuthRepository {
     return AuthResponse.fromJson(response.data);
   }
 
+  @override
+  Future<void> logout() async {
+    await _apiClient.post(Endpoints.logout, {});
+  }
+
   int _getIdRole(String role) {
     switch (role) {
       case "adulto_mayor":
