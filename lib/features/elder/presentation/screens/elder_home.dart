@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ElderHome extends StatelessWidget {
-  const ElderHome({super.key});
+class ElderHome extends StatefulWidget {
+  const ElderHome({ Key? key }) : super(key: key);
 
   @override
+  _ElderHomeState createState() => _ElderHomeState();
+}
+
+class _ElderHomeState extends State<ElderHome> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text("Home del adulto mayor")],
-        ),
-      ),
+    return Container(
+      
     );
   }
 }
