@@ -14,6 +14,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
+      automaticallyImplyLeading: false,
       backgroundColor: const Color(0xFFD4EDF8),
       iconTheme: const IconThemeData(color: Colors.white),
       centerTitle: true,

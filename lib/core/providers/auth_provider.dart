@@ -11,4 +11,9 @@ class AuthProvider with ChangeNotifier {
     _authData = authResponse;
     notifyListeners();
   }
+
+  void logout() {
+    _authData = null;
+    notifyListeners();
+  }
 }

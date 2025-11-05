@@ -9,4 +9,5 @@ abstract class AuthRepository {
     String password,
     String role,
   );
+  Future<void> logout();
 }
