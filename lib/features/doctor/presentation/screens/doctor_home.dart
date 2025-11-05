@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/widgets/appbar_widget.dart';
 import 'package:heraguard_frontend/core/widgets/card_home.dart';
+import 'package:heraguard_frontend/core/widgets/navbar_bottom.dart';
 
 class DoctorHome extends StatelessWidget {
   const DoctorHome({super.key});
@@ -36,6 +37,7 @@ class DoctorHome extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: NavbarBottom(),
     );
   }
 }

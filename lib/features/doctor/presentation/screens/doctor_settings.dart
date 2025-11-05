@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heraguard_frontend/core/widgets/navbar_bottom.dart';
 
-class DoctorChats extends StatelessWidget {
-  const DoctorChats({super.key});
+class DoctorSettings extends StatelessWidget {
+  const DoctorSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class DoctorChats extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [Text('Chats del doc')],
+          children: [Text('Doctor Ajustes')],
         ),
       ),
       bottomNavigationBar: NavbarBottom(),
