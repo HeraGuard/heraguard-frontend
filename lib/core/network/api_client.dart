@@ -7,8 +7,8 @@ class ApiClient {
   ApiClient() {
     _dio = Dio(
       BaseOptions(
-        //baseUrl: 'http://ip:5181/api',
-        baseUrl: 'https://heraguard-backend.onrender.com',
+        //baseUrl: 'https://heraguard-backend.onrender.com',
+        baseUrl: 'https://heraguard-hahfe0h7h5bcg0dh.canadacentral-01.azurewebsites.net',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
       ),

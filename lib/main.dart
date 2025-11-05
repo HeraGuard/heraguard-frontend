@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/providers/app_provider.dart';
 import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/routes/route_generator.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const AppProvider());
+  runApp(const AppProviders());
 }
 
-class AppProvider extends StatelessWidget {
-  const AppProvider({super.key});
+class AppProviders extends StatelessWidget {
+  const AppProviders({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
-      child: const MyApp(),
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AppProvider()),
+      ],
+      child: const HeraGuard(),
     );
   }
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HeraGuard extends StatelessWidget {
+  const HeraGuard({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

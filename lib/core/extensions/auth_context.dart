@@ -9,7 +9,10 @@ extension AuthContext on BuildContext {
   AuthResponse? get authData => watch<AuthProvider>().authData;
 
   UserRole get userRole {
-    final roleString = watch<AuthProvider>().userRole ?? 'adulto_mayor';
+    final roleString = watch<AuthProvider>().userRole;
+    if (roleString == null) {
+      return UserRole(role: 'unauthenticated', routes: []);
+    }
     return RoleConfig.getRole(roleString);
   }
 }

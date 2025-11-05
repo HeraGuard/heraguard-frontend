@@ -94,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _navigateToLogin() {
-    RouteUtils.goBack(context);
+    RouteUtils.goToLogin(context);
   }
 
   void _submitForm() async {
@@ -109,6 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _selectedRole!,
       );
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -124,6 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
 
+      if (!mounted) return;
       RouteUtils.goToHomeByRole(context, response.user.role);
 
       _nameController.clear();
@@ -132,9 +134,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _passwordController.clear();
       _confirmPasswordController.clear();
     } catch (e) {
-      _handleError(e);
+      if (mounted) _handleError(e);
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

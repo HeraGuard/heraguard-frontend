@@ -79,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
 
+      if (!mounted) return;
       context.read<AuthProvider>().setAuthData(response);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -96,14 +97,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
+      if (!mounted) return;
       RouteUtils.goToHomeByRole(context, response.user.role);
 
       _emailController.clear();
       _passwordController.clear();
     } catch (e) {
-      _handleError(e);
+      if (mounted) _handleError(e);
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -124,9 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (errorMessage.contains('password')) {
           errorMessage = 'Contraseña inválida';
         }
-        //   case 429:
-        //     errorMessage = 'Demasiados intentos. Intenta más tarde';
-        //     break;
       } else {
         errorMessage = 'Error de conexión';
       }
