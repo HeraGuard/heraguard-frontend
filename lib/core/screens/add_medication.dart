@@ -5,7 +5,7 @@ class AddMedicationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('AddMedicationScreen')),
+      appBar: AppBar(title: Text('Añadir Medicamento')),
       body: Container(),
     );
   }
