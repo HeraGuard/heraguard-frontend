@@ -4,7 +4,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool readOnly;
   final String label;
-  final IconData icon;
+  final IconData? icon;
   final TextInputType? keyboardType;
   final VoidCallback? onTap;
   final ValueChanged<String>? onChanged;
@@ -14,13 +14,15 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final VoidCallback? onSuffixIconPressed;
   final String? errorText;
+  final int? maxLines;
+  final int? minLines;
 
   const CustomTextField({
     super.key,
     required this.controller,
     this.readOnly = false,
     required this.label,
-    required this.icon,
+    this.icon,
     this.onTap,
     this.onChanged,
     this.keyboardType,
@@ -30,6 +32,8 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.onSuffixIconPressed,
     this.errorText,
+    this.maxLines,
+    this.minLines,
   });
 
   @override
@@ -40,6 +44,8 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       textCapitalization: textCap,
       obscureText: obscureText,
+      maxLines: obscureText ? 1 : maxLines,
+      minLines: obscureText ? 1 : minLines,
       cursorColor: const Color(0xFF0040FF),
       onChanged: onChanged,
       decoration: InputDecoration(
@@ -80,6 +86,7 @@ class CustomTextField extends StatelessWidget {
           horizontal: 16,
           vertical: 18,
         ),
+        alignLabelWithHint: maxLines != null && minLines! > 1,
       ),
       onTap: onTap,
       style: const TextStyle(fontSize: 16, color: Colors.black87),
