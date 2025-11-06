@@ -33,7 +33,6 @@ class CustomDropDown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Label
         if (label.isNotEmpty) ...[
           Text(
             label,
@@ -43,18 +42,16 @@ class CustomDropDown extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 4),
         ],
-
-        // Dropdown
         Container(
           decoration: BoxDecoration(
-            color: fillColor ?? Colors.grey[50],
+            color: fillColor ?? Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: errorText != null
                   ? Colors.red
-                  : borderColor ?? Colors.grey.shade400,
+                  : borderColor ?? Colors.grey,
             ),
           ),
           child: DropdownButtonFormField<String>(
@@ -65,7 +62,7 @@ class CustomDropDown extends StatelessWidget {
                 child: Text(
                   value,
                   style: TextStyle(
-                    color: textColor ?? Colors.black87,
+                    color: textColor ?? Colors.black,
                     fontSize: 16,
                   ),
                 ),
@@ -75,14 +72,16 @@ class CustomDropDown extends StatelessWidget {
             isExpanded: isExpanded,
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding:
-                  contentPadding ??
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
               errorText: errorText,
             ),
             icon: Icon(
               Icons.arrow_drop_down,
               color: errorText != null ? Colors.red : const Color(0xFF0040FF),
+              size: 35,
             ),
             style: TextStyle(color: textColor ?? Colors.black87, fontSize: 16),
             dropdownColor: fillColor ?? Colors.white,
@@ -90,7 +89,7 @@ class CustomDropDown extends StatelessWidget {
             hint: hintText != null
                 ? Text(
                     hintText!,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                    style: TextStyle(color: Colors.black, fontSize: 14),
                   )
                 : null,
           ),

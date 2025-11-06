@@ -10,12 +10,12 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: TextStyle(
-          color: Theme.of(context).primaryColor,
+          //color: Theme.of(context).primaryColor,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),
-      automaticallyImplyLeading: false,
-      backgroundColor: const Color(0xFFD4EDF8),
+      backgroundColor: Colors.blue,
       iconTheme: const IconThemeData(color: Colors.white),
       centerTitle: true,
     );
