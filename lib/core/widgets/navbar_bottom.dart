@@ -45,7 +45,7 @@ class _NavbarBottomState extends State<NavbarBottom> {
         setState(() {
           context.read<AppProvider>().setNavIndex(index);
         });
-        Navigator.pushNamed(context, navRoutes[index].path);
+        Navigator.pushReplacementNamed(context, navRoutes[index].path);
       },
     );
   }

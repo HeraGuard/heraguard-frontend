@@ -57,10 +57,12 @@ class CustomTextField extends StatelessWidget {
           fontSize: 16,
         ),
         hintStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
-        prefixIcon: Icon(
-          icon,
-          color: errorText != null ? Colors.red : const Color(0xFF0040FF),
-        ),
+        prefixIcon: icon != null
+            ? Icon(
+                icon,
+                color: errorText != null ? Colors.red : const Color(0xFF0040FF),
+              )
+            : null,
         suffixIcon: suffixIcon != null
             ? IconButton(
                 icon: suffixIcon!,
@@ -81,7 +83,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.0),
         ),
         filled: true,
-        fillColor: Colors.grey[50],
+        fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 18,
