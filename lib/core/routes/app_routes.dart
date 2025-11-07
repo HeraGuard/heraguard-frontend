@@ -8,6 +8,12 @@ class AppRoutes {
   static const String caregiverHome = '/caregiver-home';
   static const String doctorHome = '/doctor-home';
 
+  //Elder
+  static const String elderNotifications = '/elder-notifications';
+  static const String elderSettings = '/elder-settings';
+  static const String elderAlert = '/elder-alert';
+  static const String elderChats = '/elder-chats';
+
   // Doctor
   static const String doctorChats = '/doctor-chats';
   static const String doctorNotifications = '/doctor-notifications';
@@ -17,4 +23,8 @@ class AppRoutes {
   // All
   static const String addMedication = 'add-medication';
   static const String addActivity = 'add-activity';
+  static const String patientList = '/patient-list';
+  static const String addPatient = '/add-patient';
+  
+  static const String addMedicalAppointment = '/add-medical-appointment';
 }

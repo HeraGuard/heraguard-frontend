@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -16,6 +17,8 @@ class CustomTextField extends StatelessWidget {
   final String? errorText;
   final int? maxLines;
   final int? minLines;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
@@ -34,6 +37,8 @@ class CustomTextField extends StatelessWidget {
     this.errorText,
     this.maxLines,
     this.minLines,
+    this.maxLength,
+    this.inputFormatters,
   });
 
   @override
@@ -48,6 +53,8 @@ class CustomTextField extends StatelessWidget {
       minLines: obscureText ? 1 : minLines,
       cursorColor: const Color(0xFF0040FF),
       onChanged: onChanged,
+      maxLength: maxLength,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
@@ -57,10 +64,12 @@ class CustomTextField extends StatelessWidget {
           fontSize: 16,
         ),
         hintStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
-        prefixIcon: Icon(
-          icon,
-          color: errorText != null ? Colors.red : const Color(0xFF0040FF),
-        ),
+        prefixIcon: icon != null
+            ? Icon(
+                icon,
+                color: errorText != null ? Colors.red : const Color(0xFF0040FF),
+              )
+            : null,
         suffixIcon: suffixIcon != null
             ? IconButton(
                 icon: suffixIcon!,
@@ -81,7 +90,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.0),
         ),
         filled: true,
-        fillColor: Colors.grey[50],
+        fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 18,

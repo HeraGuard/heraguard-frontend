@@ -17,7 +17,9 @@ class DoctorHome extends StatelessWidget {
           CardHome(
             title: 'Agendar Cita',
             imagePath: 'assets/images/cita_medica.jpg',
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.addMedicalAppointment);
+            },
           ),
           const SizedBox(height: 10),
           CardHome(

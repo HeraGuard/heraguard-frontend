@@ -6,7 +6,41 @@ class RoleConfig {
     'adulto_mayor': UserRole(
       role: 'adulto_mayor',
       routes: [
-        AppRoute(name: 'home', path: '/elder-home', label: 'Home'),
+        AppRoute(
+          name: 'home', 
+          path: '/elder-home', 
+          label: 'Home',
+          showNav: true,
+          icon: Icon(Icons.home),
+        ),
+        AppRoute(
+          name: 'chats',
+          path: '/doctor-chats',
+          label: 'Chats',
+          showNav: true,
+          icon: Icon(Icons.chat),
+        ),
+        AppRoute(
+          name: 'notifications',
+          path: '/doctor-notifications',
+          label: 'Notificaciones',
+          showNav: true,
+          icon: Icon(Icons.notifications),
+        ),
+        AppRoute(
+          name: 'alert',
+          path: '/elder-alert',
+          label: 'Alert',
+          showNav: true,
+          icon: Icon(Icons.warning),
+        ),
+        AppRoute(
+          name: 'settings',
+          path: '/doctor-settings',
+          label: 'Ajustes',
+          showNav: true,
+          icon: Icon(Icons.settings),
+        ),
         AppRoute(
           name: 'addMedication',
           path: 'add-medication',
@@ -61,7 +95,7 @@ class RoleConfig {
         ),
         AppRoute(
           name: 'patients',
-          path: '/doctor-patients',
+          path: '/patient-list',
           label: 'Pacientes',
           showNav: true,
           icon: Icon(Icons.people),
@@ -72,6 +106,11 @@ class RoleConfig {
           label: 'Ajustes',
           showNav: true,
           icon: Icon(Icons.settings),
+        ),
+        AppRoute(
+          name: 'addPatient',
+          path: '/add-patient',
+          label: 'Add Patient',
         ),
         AppRoute(
           name: 'addMedication',
