@@ -61,7 +61,7 @@ class RoleConfig {
         ),
         AppRoute(
           name: 'patients',
-          path: '/doctor-patients',
+          path: '/patient-list',
           label: 'Pacientes',
           showNav: true,
           icon: Icon(Icons.people),
@@ -72,6 +72,11 @@ class RoleConfig {
           label: 'Ajustes',
           showNav: true,
           icon: Icon(Icons.settings),
+        ),
+        AppRoute(
+          name: 'addPatient',
+          path: '/add-patient',
+          label: 'Add Patient',
         ),
         AppRoute(
           name: 'addMedication',
