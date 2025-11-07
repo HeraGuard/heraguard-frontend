@@ -7,10 +7,11 @@ import 'package:heraguard_frontend/features/caregiver/presentation/screens/careg
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_chats.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_home.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_notifications.dart';
-import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_patients.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_settings.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_home.dart';
 import 'package:heraguard_frontend/features/medications/presentation/screens/add_medication.dart';
+import 'package:heraguard_frontend/features/patient/presentation/screens/add_patient.dart';
+import 'package:heraguard_frontend/features/patient/presentation/screens/patient_list.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -29,10 +30,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const DoctorChats());
       case AppRoutes.doctorNotifications:
         return MaterialPageRoute(builder: (_) => const DoctorNotifications());
-      case AppRoutes.doctorPatients:
-        return MaterialPageRoute(builder: (_) => const DoctorPatients());
       case AppRoutes.doctorSettings:
         return MaterialPageRoute(builder: (_) => const DoctorSettings());
+      case AppRoutes.patientList:
+        return MaterialPageRoute(builder: (_) => const PatientList());
+      case AppRoutes.addPatient:
+        return MaterialPageRoute(builder: (_) => const AddPatient());
       case AppRoutes.addMedication:
         return MaterialPageRoute(builder: (_) => const AddMedicationScreen());
       case AppRoutes.addActivity:

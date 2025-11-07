@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heraguard_frontend/core/widgets/appbar_widget.dart';
+import 'package:heraguard_frontend/core/widgets/custom_button.dart';
 import 'package:heraguard_frontend/core/widgets/custom_drop_down.dart';
 import 'package:heraguard_frontend/core/widgets/custom_text_field.dart';
 import 'package:heraguard_frontend/core/widgets/navbar_bottom.dart';
@@ -155,48 +156,21 @@ class _AddActivityState extends State<AddActivity> {
                     minLines: 3,
                   ),
                   const SizedBox(height: 30),
-                  SizedBox(
+                  CustomButton(
+                    text: 'Programar Actividad',
+                    onPressed: () {},
                     width: 220,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        'Programar Actividad',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
+                    height: 55,
+                    fontSize: 20,
                   ),
                   const SizedBox(height: 15),
-                  SizedBox(
+                  CustomButton(
+                    text: 'Cancelar',
+                    onPressed: () => Navigator.pop(context),
+                    backgroundColor: Colors.red,
                     width: 220,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        'Cancelar',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
+                    height: 55,
+                    fontSize: 20,
                   ),
                 ],
               ),
