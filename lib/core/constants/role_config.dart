@@ -95,7 +95,7 @@ class RoleConfig {
         ),
         AppRoute(
           name: 'patients',
-          path: '/patient-list',
+          path: '/elder-list',
           label: 'Pacientes',
           showNav: true,
           icon: Icon(Icons.people),
@@ -108,9 +108,9 @@ class RoleConfig {
           icon: Icon(Icons.settings),
         ),
         AppRoute(
-          name: 'addPatient',
-          path: '/add-patient',
-          label: 'Add Patient',
+          name: 'addElder',
+          path: '/add-elder',
+          label: 'Add Elder',
         ),
         AppRoute(
           name: 'addMedication',

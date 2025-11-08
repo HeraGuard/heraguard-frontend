@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/injection/container.dart';
 import 'package:heraguard_frontend/core/providers/app_provider.dart';
 import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/routes/route_generator.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await InjectionContainer.initialize();
   runApp(const AppProviders());
 }
 
