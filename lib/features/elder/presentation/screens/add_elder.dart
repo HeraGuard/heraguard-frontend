@@ -5,14 +5,14 @@ import 'package:heraguard_frontend/core/widgets/custom_button.dart';
 import 'package:heraguard_frontend/core/widgets/custom_text_field.dart';
 import 'package:heraguard_frontend/core/widgets/navbar_bottom.dart';
 
-class AddPatient extends StatefulWidget {
-  const AddPatient({super.key});
+class AddElder extends StatefulWidget {
+  const AddElder({super.key});
 
   @override
-  State<AddPatient> createState() => _AddPattientState();
+  State<AddElder> createState() => _AddElderState();
 }
 
-class _AddPattientState extends State<AddPatient> {
+class _AddElderState extends State<AddElder> {
   late TextEditingController _codeController;
 
   @override

@@ -17,14 +17,12 @@ class AppRoutes {
   // Doctor
   static const String doctorChats = '/doctor-chats';
   static const String doctorNotifications = '/doctor-notifications';
-  static const String doctorPatients = '/doctor-patients';
   static const String doctorSettings = '/doctor-settings';
 
   // All
   static const String addMedication = 'add-medication';
   static const String addActivity = 'add-activity';
-  static const String patientList = '/patient-list';
-  static const String addPatient = '/add-patient';
-  
   static const String addMedicalAppointment = '/add-medical-appointment';
+  static const String elderList = '/elder-list';
+  static const String addElder = '/add-elder';
 }
