@@ -32,7 +32,7 @@ class ElderBloc extends Bloc<ElderEvent, ElderState> {
   Future<void> _onLinkElder(LinkElder event, Emitter<ElderState> emit) async {
     emit(ElderLoading());
     try {
-      await linkElder(event.linkingCode);
+      await linkElder(event.linkingCode, event.relatedUserId, event.userType);
       emit(ElderLinkSuccess());
     } catch (e) {
       emit(ElderError(message: e.toString()));
