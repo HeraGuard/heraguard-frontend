@@ -7,5 +7,5 @@ class Endpoints {
 
   // Elder
   static const String getEldersByUser = '/api/Relationship/user';
-  static const String linkElder = '/elders/link';
+  static const String linkElder = '/api/Relationship';
 }

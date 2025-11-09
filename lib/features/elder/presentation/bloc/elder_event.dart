@@ -11,6 +11,8 @@ class LoadEldersByUser extends ElderEvent {
 
 class LinkElder extends ElderEvent {
   final String linkingCode;
+  final String relatedUserId;
+  final int userType;
 
-  LinkElder(this.linkingCode);
+  LinkElder(this.linkingCode, this.relatedUserId, this.userType);
 }
