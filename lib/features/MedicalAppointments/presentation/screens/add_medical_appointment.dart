@@ -87,7 +87,9 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
         context: context,
         builder: (_) => ZoomIn(
           child: AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             title: Row(
               children: [
                 Icon(Icons.check_circle, color: accentGreen, size: 28),
@@ -99,7 +101,7 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
               ],
             ),
             content: Text(
-              'Paciente: ${_nameController.text}\n'
+              'Pacienterr: ${_nameController.text}\n'
               'Fecha: ${_formatDate(_selectedDate!)}\n'
               'Hora: $timeStr\n'
               'Descripción: ${_descriptionController.text}',
@@ -110,9 +112,14 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: accentGreen,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text('Aceptar', style: TextStyle(color: Colors.white)),
+                child: const Text(
+                  'Aceptar',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -124,7 +131,9 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
           content: const Text('Completa todos los campos'),
           backgroundColor: accentRed,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -133,8 +142,8 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
 
   String _formatDate(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')}/'
-           '${date.month.toString().padLeft(2, '0')}/'
-           '${date.year}';
+        '${date.month.toString().padLeft(2, '0')}/'
+        '${date.year}';
   }
 
   // INPUT DECORATION MEJORADO
@@ -185,10 +194,7 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
   }
 
   // CAMPO CON ANIMACIÓN
-  Widget _buildField({
-    required String label,
-    required Widget field,
-  }) {
+  Widget _buildField({required String label, required Widget field}) {
     return FadeInUp(
       duration: const Duration(milliseconds: 600),
       child: Column(
@@ -288,8 +294,9 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                             onIconTap: _pickDate,
                           ),
                           onTap: _pickDate,
-                          validator: (_) =>
-                              _selectedDate == null ? 'Selecciona una fecha' : null,
+                          validator: (_) => _selectedDate == null
+                              ? 'Selecciona una fecha'
+                              : null,
                         ),
                       ),
                     ),
@@ -306,8 +313,9 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                             onIconTap: _pickTime,
                           ),
                           onTap: _pickTime,
-                          validator: (_) =>
-                              _selectedTime == null ? 'Selecciona una hora' : null,
+                          validator: (_) => _selectedTime == null
+                              ? 'Selecciona una hora'
+                              : null,
                         ),
                       ),
                     ),
