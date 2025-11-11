@@ -23,7 +23,15 @@ class ElderRemoteDataSourceImpl implements ElderRemoteDataSources {
   }
 
   @override
-  Future<void> linkElder(String linkingCode) async {
-    await apiClient.post(Endpoints.linkElder, {'linkingCode': linkingCode});
+  Future<void> linkElder(
+    String linkingCode,
+    String relatedUserId,
+    int userType,
+  ) async {
+    await apiClient.post(Endpoints.linkElder, {
+      'linkingCode': linkingCode,
+      'relatedUserId': relatedUserId,
+      'relationshipTypeId': userType,
+    });
   }
 }

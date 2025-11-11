@@ -13,7 +13,11 @@ class ElderRepositoryImpl implements ElderRepository {
   }
 
   @override
-  Future<void> linkElder(String linkingCode) {
-    return remoteDataSources.linkElder(linkingCode);
+  Future<void> linkElder(
+    String linkingCode,
+    String relatedUserId,
+    int userType,
+  ) {
+    return remoteDataSources.linkElder(linkingCode, relatedUserId, userType);
   }
 }

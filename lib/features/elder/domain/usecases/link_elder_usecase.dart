@@ -5,5 +5,6 @@ class LinkElderUsecase {
 
   LinkElderUsecase(this._repository);
 
-  Future<void> call(String linkingCode) => _repository.linkElder(linkingCode);
+  Future<void> call(String linkingCode, String relatedUserId, int userType) =>
+      _repository.linkElder(linkingCode, relatedUserId, userType);
 }
