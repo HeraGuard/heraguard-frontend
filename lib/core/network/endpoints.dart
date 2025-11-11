@@ -8,4 +8,7 @@ class Endpoints {
   // Elder
   static const String getEldersByUser = '/api/Relationship/user';
   static const String linkElder = '/elders/link';
+
+  // User search
+  static const String searchUsers = '/api/User/search';
 }
