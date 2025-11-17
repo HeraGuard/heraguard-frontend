@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/widgets/card_home.dart';
+import 'package:heraguard_frontend/core/widgets/navbar_bottom.dart';
 
 class CaregiverHome extends StatelessWidget {
   const CaregiverHome({super.key});
@@ -46,6 +47,7 @@ class CaregiverHome extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: NavbarBottom(),
     );
   }
 }

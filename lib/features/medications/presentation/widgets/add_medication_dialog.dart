@@ -24,12 +24,25 @@ class AddMedicationDialog extends StatefulWidget {
 }
 
 class _AddMedicationDialogState extends State<AddMedicationDialog> {
+  DateTime? _localSelectedDate;
+  TimeOfDay? _localSelectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _localSelectedDate = widget.selectedDate;
+    _localSelectedTime = widget.selectedTime;
+  }
+
   Future<void> _pickDate(BuildContext context) async {
     final date = await DateTimePickerHelper.pickDate(
       context,
-      initialDate: widget.selectedDate,
+      initialDate: _localSelectedDate,
     );
     if (date != null) {
+      setState(() {
+        _localSelectedDate = date;
+      });
       widget.onDateSelected(date);
     }
   }
@@ -37,9 +50,12 @@ class _AddMedicationDialogState extends State<AddMedicationDialog> {
   Future<void> _pickTime(BuildContext context) async {
     final time = await DateTimePickerHelper.pickTime(
       context,
-      initialTime: widget.selectedTime,
+      initialTime: _localSelectedTime,
     );
     if (time != null) {
+      setState(() {
+        _localSelectedTime = time;
+      });
       widget.onTimeSelected(time);
     }
   }
@@ -122,8 +138,8 @@ class _AddMedicationDialogState extends State<AddMedicationDialog> {
               child: AbsorbPointer(
                 child: TextField(
                   decoration: InputDecorationHelper.customDecoration(
-                    hint: widget.selectedDate != null
-                        ? DateTimePickerHelper.formatDate(widget.selectedDate!)
+                    hint: _localSelectedDate != null
+                        ? DateTimePickerHelper.formatDate(_localSelectedDate!)
                         : 'Seleccionar fecha',
                     icon: Icons.calendar_today,
                   ),
@@ -136,8 +152,8 @@ class _AddMedicationDialogState extends State<AddMedicationDialog> {
               child: AbsorbPointer(
                 child: TextField(
                   decoration: InputDecorationHelper.customDecoration(
-                    hint: widget.selectedTime != null
-                        ? DateTimePickerHelper.formatTime(widget.selectedTime!)
+                    hint: _localSelectedTime != null
+                        ? DateTimePickerHelper.formatTime(_localSelectedTime!)
                         : 'Seleccionar hora',
                     icon: Icons.access_time,
                   ),

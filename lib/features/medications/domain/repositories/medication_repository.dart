@@ -6,4 +6,6 @@ abstract class MedicationRepository {
     required DateTime date,
     required List<Medication> medications,
   });
+
+  Future<void> syncPendingMedications();
 }

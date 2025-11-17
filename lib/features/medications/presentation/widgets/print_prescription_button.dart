@@ -22,9 +22,9 @@ class PrintPrescriptionButton extends StatelessWidget {
         height: 55,
         child: ElevatedButton.icon(
           onPressed: isEnabled ? onPressed : null,
-          icon: const Icon(Icons.print, color: Colors.white),
+          icon: const Icon(Icons.save, color: Colors.white),
           label: Text(
-            'Visualizar Receta',
+            'Añadir Receta',
             style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
