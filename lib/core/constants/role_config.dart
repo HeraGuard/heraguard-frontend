@@ -7,8 +7,8 @@ class RoleConfig {
       role: 'adulto_mayor',
       routes: [
         AppRoute(
-          name: 'home', 
-          path: '/elder-home', 
+          name: 'home',
+          path: '/elder-home',
           label: 'Home',
           showNav: true,
           icon: Icon(Icons.home),
@@ -56,16 +56,40 @@ class RoleConfig {
     'cuidador': UserRole(
       role: 'cuidador',
       routes: [
-        AppRoute(name: 'home', path: '/caregiver-home', label: 'Home'),
         AppRoute(
-          name: 'addMedication',
-          path: 'add-medication',
-          label: 'Add Medication',
+          name: 'home',
+          path: '/caregiver-home',
+          label: 'Home',
+          showNav: true,
+          icon: Icon(Icons.home),
         ),
         AppRoute(
-          name: 'addActivity',
-          path: 'add-activity',
-          label: 'Add Activity',
+          name: 'chats',
+          path: '/doctor-chats',
+          label: 'Chats',
+          showNav: true,
+          icon: Icon(Icons.chat),
+        ),
+        AppRoute(
+          name: 'notifications',
+          path: '/doctor-notifications',
+          label: 'Notificaciones',
+          showNav: true,
+          icon: Icon(Icons.notifications),
+        ),
+        AppRoute(
+          name: 'patients',
+          path: '/elder-list',
+          label: 'Pacientes',
+          showNav: true,
+          icon: Icon(Icons.people),
+        ),
+        AppRoute(
+          name: 'settings',
+          path: '/doctor-settings',
+          label: 'Ajustes',
+          showNav: true,
+          icon: Icon(Icons.settings),
         ),
       ],
     ),
@@ -107,11 +131,7 @@ class RoleConfig {
           showNav: true,
           icon: Icon(Icons.settings),
         ),
-        AppRoute(
-          name: 'addElder',
-          path: '/add-elder',
-          label: 'Add Elder',
-        ),
+        AppRoute(name: 'addElder', path: '/add-elder', label: 'Add Elder'),
         AppRoute(
           name: 'addMedication',
           path: 'add-medication',

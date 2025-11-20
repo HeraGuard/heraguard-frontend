@@ -134,4 +134,23 @@ class MedicationRepositoryImpl implements MedicationRepository {
       }
     }
   }
+
+  @override
+  Future<List<Medication>> getMedicationsByUser(String userId) async {
+    try {
+      final response = await apiClient.get('/api/Medication/user/$userId');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data as List<dynamic>;
+        return data.map((json) => MedicationDto.fromJson(json)).toList();
+      } else {
+        throw Exception(
+          'Error al obtener medicamentos: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('Error al obtener historial: $e');
+      rethrow;
+    }
+  }
 }
