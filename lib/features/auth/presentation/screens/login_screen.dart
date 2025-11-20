@@ -2,8 +2,10 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:heraguard_frontend/core/injection/container.dart';
 import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/route_utils.dart';
+import 'package:heraguard_frontend/core/storage/secure_storage.dart';
 import 'package:heraguard_frontend/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/auth_header.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/login_form.dart';
@@ -13,13 +15,14 @@ import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+  
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AuthRepositoryImpl _authRepo = AuthRepositoryImpl();
+  final AuthRepositoryImpl _authRepo = AuthRepositoryImpl(sl<SecureStorage>()); 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
