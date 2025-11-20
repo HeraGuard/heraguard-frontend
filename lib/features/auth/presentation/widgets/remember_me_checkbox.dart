@@ -21,7 +21,7 @@ class RememberMeCheckbox extends StatelessWidget {
               onChanged(newValue);
             }
           },
-          activeColor: const Color(0xFF0040FF),
+          activeColor: Colors.blue,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
         Text(

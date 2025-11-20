@@ -74,7 +74,7 @@ class LoginForm extends StatelessWidget {
                   child: Text(
                     '¿Olvidaste tu contraseña?',
                     style: TextStyle(
-                      color: const Color(0xFF0040FF),
+                      color: Colors.blue,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

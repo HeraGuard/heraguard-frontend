@@ -9,6 +9,7 @@ class Endpoints {
   static const String getEldersByUser = '/api/Relationship/user';
 
   static const String linkElder = '/elders/link';
+  static const String addActivity = '/api/Activity';
 
   // User search
   static const String searchUsers = '/api/User/search';

@@ -13,6 +13,7 @@ class AppRoutes {
   static const String elderSettings = '/elder-settings';
   static const String elderAlert = '/elder-alert';
   static const String elderChats = '/elder-chats';
+  static const String elderProfile = '/elder-profile';
 
   // Doctor
   static const String doctorChats = '/doctor-chats';
