@@ -48,10 +48,10 @@ class ToggleRole extends StatelessWidget {
             onRoleChanged(newRole);
           },
           borderColor: Colors.grey,
-          selectedBorderColor: const Color(0xFF0040FF),
+          selectedBorderColor: Colors.blue,
           borderRadius: BorderRadius.circular(8),
           selectedColor: Colors.white,
-          fillColor: const Color(0xFF0040FF),
+          fillColor: Colors.blue,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),

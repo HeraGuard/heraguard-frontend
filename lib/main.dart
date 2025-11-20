@@ -34,7 +34,7 @@ class HeraGuard extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: const Color(0xFF0040FF),
+        primaryColor: Colors.blue,
         //scaffoldBackgroundColor: const Color(0xFFD4EDF8),
         //appBarTheme: const Color(0xFFD4EDF8),
       ),

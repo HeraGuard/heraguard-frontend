@@ -23,7 +23,7 @@ class AuthLink extends StatelessWidget {
           child: Text(
             titleLink,
             style: TextStyle(
-              color: const Color(0xFF0040FF),
+              color: Colors.blue,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

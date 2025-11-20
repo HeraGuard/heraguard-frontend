@@ -13,6 +13,7 @@ import 'package:heraguard_frontend/features/elder/presentation/screens/elder_ale
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_chats.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_home.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_notifications.dart';
+import 'package:heraguard_frontend/features/elder/presentation/screens/elder_profile.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_settings.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/add_elder.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_list.dart';
@@ -34,7 +35,7 @@ class RouteGenerator {
       case AppRoutes.elderAlert:
         return MaterialPageRoute(builder: (_) => const ElderAlert());
       case AppRoutes.elderSettings:
-        return MaterialPageRoute(builder: (_) => const ElderSettings());  
+        return MaterialPageRoute(builder: (_) => const ElderSettings());
       case AppRoutes.caregiverHome:
         return MaterialPageRoute(builder: (_) => const CaregiverHome());
       case AppRoutes.doctorHome:
@@ -52,9 +53,11 @@ class RouteGenerator {
       case AppRoutes.addMedication:
         return MaterialPageRoute(builder: (_) => const AddMedicationScreen());
       case AppRoutes.addActivity:
-        return MaterialPageRoute(builder: (_) => const AddActivity());
+        return MaterialPageRoute(builder: (_) => const AddActivityScreen());
       case AppRoutes.addMedicalAppointment:
         return MaterialPageRoute(builder: (_) => const AddMedicalAppointment());
+      case AppRoutes.elderProfile:
+        return MaterialPageRoute(builder: (_) => const ElderProfile());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

@@ -15,14 +15,14 @@ class RoleConfig {
         ),
         AppRoute(
           name: 'chats',
-          path: '/doctor-chats',
+          path: '/elder-chats',
           label: 'Chats',
           showNav: true,
           icon: Icon(Icons.chat),
         ),
         AppRoute(
           name: 'notifications',
-          path: '/doctor-notifications',
+          path: '/elder-notifications',
           label: 'Notificaciones',
           showNav: true,
           icon: Icon(Icons.notifications),
@@ -36,7 +36,7 @@ class RoleConfig {
         ),
         AppRoute(
           name: 'settings',
-          path: '/doctor-settings',
+          path: '/elder-settings',
           label: 'Ajustes',
           showNav: true,
           icon: Icon(Icons.settings),
