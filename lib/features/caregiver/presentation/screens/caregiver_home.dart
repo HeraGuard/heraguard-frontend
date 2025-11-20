@@ -48,6 +48,7 @@ class CaregiverHome extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.medicationHistory,
+                  //TODO Esto es un test corregir si usa esa ruta en otra parte
                   arguments: "0d271773-bb94-4bf2-be7e-c865ecaf25d9",
                 );
               },

@@ -125,6 +125,7 @@ class MedicationHistoryScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return MedicationHistoryCard(
                       medication: state.medications[index],
+                      userId: userId,
                     );
                   },
                 ),

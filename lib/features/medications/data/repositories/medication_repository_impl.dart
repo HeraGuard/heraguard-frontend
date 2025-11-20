@@ -153,4 +153,25 @@ class MedicationRepositoryImpl implements MedicationRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> deleteMedication(String medicationId) async {
+    try {
+      print('🗑️ Eliminando medicamento: $medicationId');
+
+      final response = await apiClient.delete('/api/Medication/$medicationId');
+
+      print('✅ Response status: ${response.statusCode}');
+
+      // Solo valida que NO sea un error (2xx = éxito)
+      if (response.statusCode! < 200 || response.statusCode! >= 300) {
+        throw Exception('Error al eliminar: ${response.statusCode}');
+      }
+
+      print('✅ Medicamento eliminado exitosamente');
+    } catch (e) {
+      print('❌ Error al eliminar medicamento: $e');
+      rethrow;
+    }
+  }
 }
