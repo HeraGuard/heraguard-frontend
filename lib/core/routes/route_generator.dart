@@ -4,6 +4,7 @@ import 'package:heraguard_frontend/features/MedicalAppointments/presentation/scr
 import 'package:heraguard_frontend/features/activities/presentation/screens/add_activity.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/login_screen.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/register_screen.dart';
+import 'package:heraguard_frontend/features/auth/presentation/screens/splash_screen.dart';
 import 'package:heraguard_frontend/features/caregiver/presentation/screens/caregiver_home.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_chats.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_home.dart';
@@ -58,6 +59,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const AddMedicalAppointment());
       case AppRoutes.elderProfile:
         return MaterialPageRoute(builder: (_) => const ElderProfile());
+      case AppRoutes.splash:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

@@ -2,7 +2,7 @@ class AppRoutes {
   // Auth
   static const String login = '/login';
   static const String register = '/register';
-
+  static const String splash = '/splash';
   // Home
   static const String elderHome = '/elder-home';
   static const String caregiverHome = '/caregiver-home';

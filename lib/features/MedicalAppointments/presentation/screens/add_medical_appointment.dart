@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:heraguard_frontend/core/widgets/date_widget.dart';
+import 'package:heraguard_frontend/core/widgets/time_widget.dart';
 
 class AddMedicalAppointment extends StatefulWidget {
   const AddMedicalAppointment({super.key});
@@ -16,7 +18,7 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
-  // Colores personalizados
+  // Colores (sin cambios)
   static const Color primaryBlue = Color(0xFF1E88E5);
   static const Color accentGreen = Color(0xFF43A047);
   static const Color accentRed = Color(0xFFE53935);
@@ -36,7 +38,7 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
       context: context,
       initialDate: _selectedDate ?? now,
       firstDate: now.subtract(const Duration(days: 365)),
-      lastDate: now.add(const Duration(days: 365)),
+      lastDate: now.add(const Duration(days: 365 * 2)),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
           colorScheme: const ColorScheme.light(
@@ -87,21 +89,16 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
         context: context,
         builder: (_) => ZoomIn(
           child: AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: Row(
               children: [
-                Icon(Icons.check_circle, color: accentGreen, size: 28),
+                const Icon(Icons.check_circle, color: accentGreen, size: 28),
                 const SizedBox(width: 8),
-                Text(
-                  '¡Cita Guardada!',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-                ),
+                Text('¡Cita Guardada!', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
               ],
             ),
             content: Text(
-              'Pacienterr: ${_nameController.text}\n'
+              'Paciente: ${_nameController.text}\n'
               'Fecha: ${_formatDate(_selectedDate!)}\n'
               'Hora: $timeStr\n'
               'Descripción: ${_descriptionController.text}',
@@ -112,14 +109,9 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: accentGreen,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text(
-                  'Aceptar',
-                  style: TextStyle(color: Colors.white),
-                ),
+                child: const Text('Aceptar', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -131,9 +123,7 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
           content: const Text('Completa todos los campos'),
           backgroundColor: accentRed,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -146,54 +136,6 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
         '${date.year}';
   }
 
-  // INPUT DECORATION MEJORADO
-  InputDecoration _inputDecoration({
-    required String hint,
-    IconData? icon,
-    VoidCallback? onIconTap,
-    bool isMultiline = false,
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: GoogleFonts.roboto(fontSize: 18, color: Colors.grey[600]),
-      filled: true,
-      fillColor: cardColor,
-      // Ícono a la izquierda (solo si no es fecha/hora)
-      prefixIcon: icon != null && onIconTap == null
-          ? Container(
-              padding: EdgeInsets.only(top: isMultiline ? 16 : 0, left: 12),
-              child: Icon(icon, color: primaryBlue, size: 24),
-            )
-          : null,
-      // Ícono a la derecha (solo para fecha/hora)
-      suffixIcon: onIconTap != null
-          ? IconButton(
-              icon: Icon(icon, color: primaryBlue),
-              onPressed: onIconTap,
-            )
-          : null,
-      contentPadding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: isMultiline ? 20 : 20,
-        bottom: isMultiline ? 20 : 20,
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide.none,
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide.none,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: primaryBlue, width: 2),
-      ),
-    );
-  }
-
-  // CAMPO CON ANIMACIÓN
   Widget _buildField({required String label, required Widget field}) {
     return FadeInUp(
       duration: const Duration(milliseconds: 600),
@@ -230,24 +172,13 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
 
   @override
   Widget build(BuildContext context) {
-    final dateText = _selectedDate == null
-        ? 'DD/MM/AAAA'
-        : _formatDate(_selectedDate!);
-    final timeText = _selectedTime == null
-        ? 'HH:MM'
-        : _selectedTime!.format(context);
-
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
           'Nueva Cita Médica',
-          style: GoogleFonts.poppins(
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         backgroundColor: primaryBlue,
         elevation: 0,
@@ -269,61 +200,51 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                   field: TextFormField(
                     controller: _nameController,
                     style: GoogleFonts.roboto(fontSize: 18),
-                    decoration: _inputDecoration(
-                      hint: 'Ej. Juan Pérez',
-                      icon: Icons.person_outline,
+                    decoration: InputDecoration(
+                      hintText: 'Ej. Juan Pérez',
+                      hintStyle: GoogleFonts.roboto(fontSize: 18, color: Colors.grey[600]),
+                      filled: true,
+                      fillColor: cardColor,
+                      prefixIcon: const Icon(Icons.person_outline, color: primaryBlue),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: primaryBlue, width: 2),
+                      ),
                     ),
-                    validator: (v) =>
-                        v?.trim().isEmpty ?? true ? 'Campo requerido' : null,
+                    validator: (v) => v?.trim().isEmpty ?? true ? 'Campo requerido' : null,
                   ),
                 ),
                 const SizedBox(height: 24),
 
-                // Fecha y Hora (solo ícono a la derecha)
                 Row(
                   children: [
-                    Expanded(
-                      child: _buildField(
-                        label: 'Fecha',
-                        field: TextFormField(
-                          readOnly: true,
-                          style: GoogleFonts.roboto(fontSize: 18),
-                          decoration: _inputDecoration(
-                            hint: dateText,
-                            icon: Icons.calendar_today,
-                            onIconTap: _pickDate,
-                          ),
-                          onTap: _pickDate,
-                          validator: (_) => _selectedDate == null
-                              ? 'Selecciona una fecha'
-                              : null,
-                        ),
-                      ),
+                    // DateWidget
+                    DateWidget(
+                      selectedDate: _selectedDate,
+                      onTap: _pickDate,
+                      validator: () => _selectedDate == null ? 'Selecciona una fecha' : null,
                     ),
                     const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildField(
-                        label: 'Hora',
-                        field: TextFormField(
-                          readOnly: true,
-                          style: GoogleFonts.roboto(fontSize: 18),
-                          decoration: _inputDecoration(
-                            hint: timeText,
-                            icon: Icons.access_time,
-                            onIconTap: _pickTime,
-                          ),
-                          onTap: _pickTime,
-                          validator: (_) => _selectedTime == null
-                              ? 'Selecciona una hora'
-                              : null,
-                        ),
-                      ),
+                    // TimeWidget
+                    TimeWidget(
+                      selectedTime: _selectedTime,
+                      onTap: _pickTime,
+                      validator: () => _selectedTime == null ? 'Selecciona una hora' : null,
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
 
-                // Descripción (ícono arriba a la izquierda)
+                // Descripción
                 _buildField(
                   label: 'Descripción de la Cita',
                   field: TextFormField(
@@ -331,18 +252,34 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                     style: GoogleFonts.roboto(fontSize: 18),
                     minLines: 4,
                     maxLines: 6,
-                    decoration: _inputDecoration(
-                      hint: 'Motivo de la consulta, síntomas, etc.',
-                      icon: Icons.note_alt_outlined,
-                      isMultiline: true,
+                    decoration: InputDecoration(
+                      hintText: 'Motivo de la consulta, síntomas, etc.',
+                      hintStyle: GoogleFonts.roboto(fontSize: 18, color: Colors.grey[600]),
+                      filled: true,
+                      fillColor: cardColor,
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.only(top: 16, left: 4),
+                        child: Icon(Icons.note_alt_outlined, color: primaryBlue),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: primaryBlue, width: 2),
+                      ),
                     ),
-                    validator: (v) =>
-                        v?.trim().isEmpty ?? true ? 'Campo requerido' : null,
+                    validator: (v) => v?.trim().isEmpty ?? true ? 'Campo requerido' : null,
                   ),
                 ),
                 const SizedBox(height: 32),
 
-                // Botones
                 Row(
                   children: [
                     Expanded(
@@ -352,19 +289,13 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: accentGreen,
                             padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             elevation: 8,
                             shadowColor: accentGreen.withOpacity(0.4),
                           ),
                           child: Text(
                             'Guardar Cita',
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
+                            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
                           ),
                         ),
                       ),
@@ -379,17 +310,11 @@ class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
                             backgroundColor: accentRed,
                             side: const BorderSide(color: accentRed, width: 2),
                             padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
                           child: Text(
                             'Cancelar',
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
+                            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
                           ),
                         ),
                       ),
