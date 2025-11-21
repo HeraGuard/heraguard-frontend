@@ -24,6 +24,7 @@ class User {
   final String lastName;
   final String email;
   final String role;
+  final String? linkingCode;
 
   User({
     required this.id,
@@ -31,6 +32,7 @@ class User {
     required this.lastName,
     required this.email,
     required this.role,
+    this.linkingCode,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class User {
       lastName: json['lastName'],
       email: json['email'],
       role: json['role'],
+      linkingCode: json['linkingCode'],
     );
   }
 }

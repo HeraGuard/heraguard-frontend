@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:heraguard_frontend/core/constants/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -51,7 +53,7 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       maxLines: obscureText ? 1 : maxLines,
       minLines: obscureText ? 1 : minLines,
-      cursorColor: const Color(0xFF0040FF),
+      cursorColor: AppColors.primaryBlue,
       onChanged: onChanged,
       maxLength: maxLength,
       inputFormatters: inputFormatters,
@@ -63,18 +65,15 @@ class CustomTextField extends StatelessWidget {
           fontWeight: FontWeight.w500,
           fontSize: 16,
         ),
-        hintStyle: TextStyle(color: Colors.grey[600], fontSize: 14),
+        hintStyle: GoogleFonts.roboto(fontSize: 18, color: Colors.grey[600]),
         prefixIcon: icon != null
-            ? Icon(
-                icon,
-                color: errorText != null ? Colors.red : const Color(0xFF0040FF),
-              )
+            ? Icon(icon, color: errorText != null ? Colors.red : AppColors.primaryBlue)
             : null,
         suffixIcon: suffixIcon != null
             ? IconButton(
                 icon: suffixIcon!,
                 onPressed: onSuffixIconPressed,
-                color: errorText != null ? Colors.red : const Color(0xFF0040FF),
+                color: errorText != null ? Colors.red : Colors.blue,
               )
             : null,
         enabledBorder: OutlineInputBorder(
@@ -85,7 +84,7 @@ class CustomTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: errorText != null ? Colors.red : const Color(0xFF0040FF),
+            color: errorText != null ? Colors.red : Colors.blue,
           ),
           borderRadius: BorderRadius.circular(12.0),
         ),

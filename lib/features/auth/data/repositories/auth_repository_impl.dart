@@ -1,10 +1,14 @@
 import 'package:heraguard_frontend/core/network/api_client.dart';
 import 'package:heraguard_frontend/core/network/endpoints.dart';
+import 'package:heraguard_frontend/core/storage/secure_storage.dart';
 import 'package:heraguard_frontend/features/auth/data/models/auth_response.dart';
 import 'package:heraguard_frontend/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final ApiClient _apiClient = ApiClient();
+  final SecureStorage _secureStorage;
+
+  AuthRepositoryImpl(this._secureStorage);
 
   @override
   Future<AuthResponse> login(String email, String password) async {
@@ -13,9 +17,21 @@ class AuthRepositoryImpl implements AuthRepository {
       'password': password,
     });
 
-    return AuthResponse.fromJson(response.data);
+    final authResponse = AuthResponse.fromJson(response.data);
+
+    await _secureStorage.write(
+      key: 'access_token',
+      value: authResponse.accessToken,
+    );
+
+    await _secureStorage.write( 
+      key: 'user_role',
+      value: authResponse.user.role,
+    );
+
+    return authResponse;
   }
-  
+
   @override
   Future<AuthResponse> register(
     String name,
@@ -37,6 +53,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
+    await _secureStorage.delete(key: 'access_token');
     await _apiClient.post(Endpoints.logout, {});
   }
 
@@ -51,5 +68,9 @@ class AuthRepositoryImpl implements AuthRepository {
       default:
         return 1;
     }
+  }
+
+  Future<String?> getToken() async {
+    return await _secureStorage.read(key: 'access_token');
   }
 }

@@ -4,6 +4,7 @@ import 'package:heraguard_frontend/features/MedicalAppointments/presentation/scr
 import 'package:heraguard_frontend/features/activities/presentation/screens/add_activity.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/login_screen.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/register_screen.dart';
+import 'package:heraguard_frontend/features/auth/presentation/screens/splash_screen.dart';
 import 'package:heraguard_frontend/features/caregiver/presentation/screens/caregiver_home.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_chats.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_home.dart';
@@ -13,6 +14,7 @@ import 'package:heraguard_frontend/features/elder/presentation/screens/elder_ale
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_chats.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_home.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_notifications.dart';
+import 'package:heraguard_frontend/features/elder/presentation/screens/elder_profile.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_settings.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/add_elder.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_list.dart';
@@ -53,7 +55,7 @@ class RouteGenerator {
       case AppRoutes.addMedication:
         return MaterialPageRoute(builder: (_) => const AddMedicationScreen());
       case AppRoutes.addActivity:
-        return MaterialPageRoute(builder: (_) => const AddActivity());
+        return MaterialPageRoute(builder: (_) => const AddActivityScreen());
       case AppRoutes.addMedicalAppointment:
         return MaterialPageRoute(builder: (_) => const AddMedicalAppointment());
       case AppRoutes.medicationHistory:
@@ -61,6 +63,10 @@ class RouteGenerator {
           builder: (_) => const MedicationHistoryScreen(),
           settings: settings,
         );
+      case AppRoutes.elderProfile:
+        return MaterialPageRoute(builder: (_) => const ElderProfile());
+      case AppRoutes.splash:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

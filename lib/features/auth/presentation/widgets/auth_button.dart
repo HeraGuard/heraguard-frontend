@@ -21,7 +21,7 @@ class AuthButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : (isEnabled ? onPressed : null),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0040FF),
+          backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(

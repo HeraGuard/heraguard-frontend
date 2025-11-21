@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:heraguard_frontend/core/injection/container.dart';
 import 'package:heraguard_frontend/core/routes/route_utils.dart';
+import 'package:heraguard_frontend/core/storage/secure_storage.dart';
 import 'package:heraguard_frontend/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/auth_link.dart';
 import 'package:heraguard_frontend/features/auth/presentation/widgets/auth_header.dart';
@@ -17,7 +19,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final AuthRepositoryImpl _authRepo = AuthRepositoryImpl();
+  final AuthRepositoryImpl _authRepo = AuthRepositoryImpl(sl<SecureStorage>());
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();

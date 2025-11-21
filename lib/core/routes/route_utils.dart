@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:heraguard_frontend/core/constants/role_config.dart';
+import 'package:heraguard_frontend/core/injection/container.dart';
 import 'package:heraguard_frontend/core/models/user_role.dart';
 import 'package:heraguard_frontend/core/providers/app_provider.dart';
 import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
+import 'package:heraguard_frontend/core/storage/secure_storage.dart';
 import 'package:heraguard_frontend/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +22,8 @@ class RouteUtils {
     final authProvider = context.read<AuthProvider>();
     final appProvider = context.read<AppProvider>();
     try {
-      await AuthRepositoryImpl().logout();
+      final authRepository = AuthRepositoryImpl(sl<SecureStorage>());
+      await authRepository.logout();
     } catch (e) {
       print("Error en logout backend: $e");
     } finally {

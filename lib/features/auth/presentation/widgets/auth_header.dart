@@ -12,8 +12,8 @@ class AuthHeader extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
-    this.iconColor = const Color(0xFF0040FF),
-    this.textColor = const Color(0xFF0040FF),
+    this.iconColor = Colors.blue,
+    this.textColor = Colors.blue,
   });
 
   @override
