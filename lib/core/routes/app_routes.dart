@@ -26,4 +26,5 @@ class AppRoutes {
   static const String addMedicalAppointment = '/add-medical-appointment';
   static const String elderList = '/elder-list';
   static const String addElder = '/add-elder';
+  static const String medicationHistory = '/medication-history';
 }

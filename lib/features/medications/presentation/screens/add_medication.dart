@@ -74,19 +74,22 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     });
   }
 
-  void _savePrescription(BuildContext context) {
+  bool _isSaving = false;
+  void _savePrescription(BuildContext context) async {
+    if (_isSaving) return;
     if (_medications.isEmpty || _selectedElderId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Debes seleccionar un paciente y agregar medicamentos',
-            style: GoogleFonts.poppins(),
-          ),
+          content: Text('Debes seleccionar un paciente y agregar medicamentos'),
           backgroundColor: Colors.red,
         ),
       );
       return;
     }
+
+    setState(() {
+      _isSaving = true;
+    });
 
     DateTime prescriptionDateTime = DateTime.now();
     if (_selectedDate != null && _selectedTime != null) {
@@ -117,13 +120,35 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       );
     }).toList();
 
-    context.read<MedicationBloc>().add(
-      AddMedicationEvent(
+    try {
+      // SU PATRÓN SERÁ ASÍ SEGÚN TU LÓGICA BLoC, REEMPLAZA POR TU MÉTODO
+      await context.read<MedicationBloc>().repository.addPrescription(
         elderId: _selectedElderId,
         date: prescriptionDateTime,
         medications: medicationEntities,
-      ),
-    );
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Receta guardada exitosamente ✓'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      setState(() {
+        _medications.clear();
+        _selectedDate = null;
+        _selectedTime = null;
+        _isSaving = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+      );
+      setState(() {
+        _isSaving = false;
+      });
+    }
   }
 
   @override
@@ -220,7 +245,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                             isEnabled:
                                 _medications.isNotEmpty &&
                                 _selectedElderId.isNotEmpty &&
-                                state is! MedicationLoading,
+                                !_isSaving,
                             onPressed: () => _savePrescription(context),
                           ),
                         ],

@@ -1,0 +1,54 @@
+class AppointmentNotificationScheduler {
+  final NotificationService _notificationService = NotificationService();
+
+  Future<void> scheduleAppointmentNotifications(Appointment appointment) async {
+    await _notificationService.initialize();
+    await _notificationService.requestPermissions();
+
+    // 1 día antes
+    final oneDayBefore = appointment.date.subtract(Duration(days: 1));
+    if (oneDayBefore.isAfter(DateTime.now())) {
+      await _notificationService.scheduleNotification(
+        id: _generateNotificationId('${appointment.appointmentId}_oneday'),
+        title: '📅 Recordatorio de cita',
+        body: 'Tu cita es mañana: ${appointment.subject}',
+        scheduledDate: oneDayBefore,
+        payload: appointment.appointmentId,
+      );
+    }
+
+    // 1 hora antes
+    final oneHourBefore = appointment.date.subtract(Duration(hours: 1));
+    if (oneHourBefore.isAfter(DateTime.now())) {
+      await _notificationService.scheduleNotification(
+        id: _generateNotificationId('${appointment.appointmentId}_onehour'),
+        title: '⏰ Recordatorio de cita',
+        body: 'Tu cita es en 1 hora: ${appointment.subject}',
+        scheduledDate: oneHourBefore,
+        payload: appointment.appointmentId,
+      );
+    }
+
+    // Momento exacto
+    if (appointment.date.isAfter(DateTime.now())) {
+      await _notificationService.scheduleNotification(
+        id: _generateNotificationId('${appointment.appointmentId}_ontime'),
+        title: '🚩 Es hora de tu cita',
+        body: 'Recuerda tu cita: ${appointment.subject}',
+        scheduledDate: appointment.date,
+        payload: appointment.appointmentId,
+      );
+    }
+  }
+
+  int _generateNotificationId(String baseId) {
+    return baseId.substring(0, 8).hashCode.abs();
+  }
+
+  Future<void> cancelAppointmentNotifications(String appointmentId) async {
+    final baseId = _generateNotificationId(appointmentId);
+
+    // Puedes cancelar un rango usando el mismo patrón que medicamentos
+    await _notificationService.cancelNotificationRange(baseId, baseId + 1000);
+  }
+}

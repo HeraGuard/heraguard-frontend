@@ -1,5 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:heraguard_frontend/core/network/api_client.dart';
 import 'package:heraguard_frontend/core/network/endpoints.dart';
+import 'package:heraguard_frontend/core/services/medication_notification_scheduler.dart';
 import '../../domain/entities/medication.dart';
 import '../../domain/repositories/medication_repository.dart';
 import '../datasources/medication_local_data_source.dart';
@@ -9,6 +11,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 class MedicationRepositoryImpl implements MedicationRepository {
   final MedicationLocalDataSource localDataSource;
   final ApiClient apiClient;
+  final MedicationNotificationScheduler _notificationScheduler =
+      MedicationNotificationScheduler();
 
   MedicationRepositoryImpl({
     required this.localDataSource,
@@ -23,13 +27,14 @@ class MedicationRepositoryImpl implements MedicationRepository {
   }) async {
     final connectivityResult = await Connectivity().checkConnectivity();
 
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
+    final isConnected =
+        connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi);
+
+    if (isConnected) {
       try {
-        // Formato que coincide con CreatePrescriptionCommand
         final response = await apiClient.post(Endpoints.prescriptions, {
-          'elderId':
-              elderId, // ← C# espera "ElderId" pero JSON es case-insensitive por defecto
+          'elderId': elderId,
           'doctorId': null,
           'date': DateTime.now().toUtc().toIso8601String(),
           'medications': medications
@@ -50,12 +55,20 @@ class MedicationRepositoryImpl implements MedicationRepository {
         });
 
         if (response.statusCode == 200 || response.statusCode == 201) {
+          for (var medication in medications) {
+            await _notificationScheduler.scheduleMedicationNotifications(
+              medication,
+            );
+
+            await localDataSource.deleteAllTempByNameAndElder(
+              name: medication.name,
+              elderId: medication.elderId,
+            );
+          }
           return;
         }
       } catch (e) {
-        print('Error al sincronizar con backend: $e');
         await _saveLocallyAsPending(medications, elderId);
-        return;
       }
     } else {
       await _saveLocallyAsPending(medications, elderId);
@@ -64,8 +77,12 @@ class MedicationRepositoryImpl implements MedicationRepository {
 
   Future<void> _saveLocallyAsPending(
     List<Medication> medications,
-    String elderId,
-  ) async {
+    String elderId, {
+    bool isOffline = false,
+  }) async {
+    if (!isOffline) {
+      return;
+    }
     for (var med in medications) {
       final medWithElder = Medication(
         medicationId:
@@ -86,9 +103,13 @@ class MedicationRepositoryImpl implements MedicationRepository {
 
       final dto = MedicationDto.fromDomain(medWithElder);
       await localDataSource.insertMedicationAsPending(dto);
+      await _notificationScheduler.scheduleMedicationNotifications(
+        medWithElder,
+      );
     }
   }
 
+  @override
   Future<void> syncPendingMedications() async {
     final pendientes = await localDataSource.getPendingMedications();
     if (pendientes.isEmpty) return;
@@ -130,8 +151,69 @@ class MedicationRepositoryImpl implements MedicationRepository {
           }
         }
       } catch (e) {
-        print('Error sincronizando grupo de ${entry.key}: $e');
+        debugPrint('Error sincronizando grupo de ${entry.key}: $e');
       }
+    }
+  }
+
+  @override
+  Future<List<Medication>> getMedicationsByUser(String userId) async {
+    List<Medication> result = [];
+    try {
+      final response = await apiClient.get('/api/Medication/user/$userId');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data as List<dynamic>;
+        final remoteMeds = data
+            .map((json) => MedicationDto.fromJson(json))
+            .toList();
+        result.addAll(remoteMeds);
+      } else {
+        throw Exception(
+          'Error al obtener medicamentos: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      debugPrint('Error al obtener historial: $e');
+      rethrow;
+    }
+
+    try {
+      final localMeds = await localDataSource.getPendingMedicationsByElder(
+        userId,
+      );
+      final remoteIds = result.map((e) => e.medicationId).toSet();
+
+      for (final med in localMeds) {
+        if (!remoteIds.contains(med.medicationId)) {
+          result.add(med);
+        }
+      }
+    } catch (e) {
+      debugPrint(' Error al obtener medicamentos locales: $e');
+    }
+
+    return result;
+  }
+
+  @override
+  Future<void> deleteMedication(String medicationId) async {
+    try {
+      await _notificationScheduler.cancelMedicationNotifications(medicationId);
+
+      if (medicationId.startsWith('temp_')) {
+        await localDataSource.deleteMedication(medicationId);
+        return;
+      }
+
+      final response = await apiClient.delete('/api/Medication/$medicationId');
+
+      if (response.statusCode! < 200 || response.statusCode! >= 300) {
+        throw Exception('Error al eliminar: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error al eliminar medicamento: $e');
+      rethrow;
     }
   }
 }

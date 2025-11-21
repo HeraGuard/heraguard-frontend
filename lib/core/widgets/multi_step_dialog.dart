@@ -8,11 +8,11 @@ class MultiStepDialog extends StatefulWidget {
   final Function(Map<String, dynamic>) onComplete;
 
   const MultiStepDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.steps,
     required this.onComplete,
-  }) : super(key: key);
+  });
 
   @override
   State<MultiStepDialog> createState() => _MultiStepDialogState();

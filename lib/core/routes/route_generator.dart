@@ -18,6 +18,7 @@ import 'package:heraguard_frontend/features/elder/presentation/screens/elder_pro
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_settings.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/add_elder.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_list.dart';
+import 'package:heraguard_frontend/features/medication_history/presentation/screens/medication_history_screen.dart';
 import 'package:heraguard_frontend/features/medications/presentation/screens/add_medication.dart';
 
 class RouteGenerator {
@@ -57,6 +58,11 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const AddActivityScreen());
       case AppRoutes.addMedicalAppointment:
         return MaterialPageRoute(builder: (_) => const AddMedicalAppointment());
+      case AppRoutes.medicationHistory:
+        return MaterialPageRoute(
+          builder: (_) => const MedicationHistoryScreen(),
+          settings: settings,
+        );
       case AppRoutes.elderProfile:
         return MaterialPageRoute(builder: (_) => const ElderProfile());
       case AppRoutes.splash:

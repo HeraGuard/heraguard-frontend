@@ -4,6 +4,7 @@ import 'package:heraguard_frontend/core/providers/app_provider.dart';
 import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/routes/route_generator.dart';
+import 'package:heraguard_frontend/core/services/notification_service.dart';
 import 'package:heraguard_frontend/core/storage/secure_storage.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await InjectionContainer.initialize();
   runApp(const AppProviders());
+  await NotificationService().initialize();
 }
 
 class AppProviders extends StatelessWidget {
@@ -20,7 +22,9 @@ class AppProviders extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider(sl<SecureStorage>()),),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(sl<SecureStorage>()),
+        ),
         ChangeNotifierProvider(create: (_) => AppProvider()),
       ],
       child: const HeraGuard(),
@@ -40,7 +44,7 @@ class HeraGuard extends StatelessWidget {
         //appBarTheme: const Color(0xFFD4EDF8),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute:  AppRoutes.splash,
+      initialRoute: AppRoutes.splash,
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

@@ -1,4 +1,3 @@
-// Widget: Tarjeta de medicamento
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heraguard_frontend/core/constants/app_colors.dart';
@@ -24,6 +23,7 @@ class MedicationCardWidget extends StatelessWidget {
         border: Border.all(color: AppColors.primaryBlue, width: 2),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
@@ -36,6 +36,7 @@ class MedicationCardWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: AppColors.primaryBlue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
