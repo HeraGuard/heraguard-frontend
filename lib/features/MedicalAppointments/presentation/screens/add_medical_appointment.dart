@@ -1,329 +1,275 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:heraguard_frontend/core/constants/app_colors.dart';
+import 'package:heraguard_frontend/core/network/api_client.dart';
+import 'package:heraguard_frontend/core/widgets/custom_app_bar_bryan.dart';
 import 'package:heraguard_frontend/core/widgets/date_widget.dart';
 import 'package:heraguard_frontend/core/widgets/time_widget.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/data/repositories/medical_appointment_repository_impl.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/datasources/medical_appointments_local_sources.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/domain/entities/medical_appointment.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/presentation/bloc/medical_appointment_bloc.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/presentation/bloc/medical_appointment_event.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/presentation/bloc/medical_appointment_state.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/presentation/widgets/description_field.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/presentation/widgets/patient_search_section.dart';
+import 'package:heraguard_frontend/features/MedicalAppointments/presentation/widgets/save_appointment_button.dart';
+import 'package:heraguard_frontend/features/user_search/data/datasources/user_search_remote_datasource.dart';
+import 'package:heraguard_frontend/features/user_search/data/repositories/user_search_repository_impl.dart';
+import 'package:heraguard_frontend/features/user_search/domain/usecases/search_users_usecase.dart';
+import 'package:heraguard_frontend/features/user_search/presentation/bloc/user_search_bloc.dart';
 
 class AddMedicalAppointment extends StatefulWidget {
   const AddMedicalAppointment({super.key});
 
   @override
-  State<AddMedicalAppointment> createState() => _AddMedicalAppointmentState();
+  State<AddMedicalAppointment> createState() =>
+      _AddMedicalAppointmentPageState();
 }
 
-class _AddMedicalAppointmentState extends State<AddMedicalAppointment> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
+class _AddMedicalAppointmentPageState extends State<AddMedicalAppointment> {
+  String _selectedElderId = '';
+  String _selectedElderName = '';
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  final TextEditingController _descriptionController = TextEditingController();
 
-  // Colores (sin cambios)
-  static const Color primaryBlue = Color(0xFF1E88E5);
-  static const Color accentGreen = Color(0xFF43A047);
-  static const Color accentRed = Color(0xFFE53935);
-  static const Color cardColor = Colors.white;
-  static const Color bgColor = Color(0xFFF5F7FA);
+  String? get currentDoctorId => null;
+  String? get currentDoctorName => 'Dr. Juan Pérez';
+
+  @override
+  void initState() {
+    super.initState();
+    _descriptionController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  void _onPatientSelected(String elderId, String elderName) {
+    setState(() {
+      _selectedElderId = elderId;
+      _selectedElderName = elderName;
+    });
+  }
+
+  Future<void> _selectDate() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (date != null) {
+      setState(() {
+        _selectedDate = date;
+      });
+    }
+  }
+
+  Future<void> _selectTime() async {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime ?? TimeOfDay.now(),
+    );
+    if (time != null) {
+      setState(() {
+        _selectedTime = time;
+      });
+    }
+  }
+
+  void _saveAppointment(BuildContext context) {
+    if (_selectedElderId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Debes seleccionar un paciente',
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_selectedDate == null || _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Debes seleccionar fecha y hora',
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_descriptionController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Debes agregar una descripción',
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final appointment = MedicalAppointment(
+      medicalAppointmentId: 'temp_${DateTime.now().millisecondsSinceEpoch}',
+      nameOfPatient: _selectedElderName,
+      date: _selectedDate!,
+      time:
+          '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}',
+      description: _descriptionController.text.trim(),
+      doctorId: currentDoctorId,
+      caregiverId: null,
+      elderId: _selectedElderId,
+      doctorName: currentDoctorName,
+      caregiverName: null,
+      elderName: _selectedElderName,
+    );
+
+    context
+        .read<MedicalAppointmentBloc>()
+        .add(AddMedicalAppointmentEvent(appointment));
+  }
 
   @override
   void dispose() {
-    _nameController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
 
-  Future<void> _pickDate() async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? now,
-      firstDate: now.subtract(const Duration(days: 365)),
-      lastDate: now.add(const Duration(days: 365 * 2)),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: primaryBlue,
-            onPrimary: Colors.white,
-          ),
-          textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(foregroundColor: primaryBlue),
-          ),
-        ),
-        child: child!,
-      ),
-    );
-    if (picked != null) {
-      setState(() => _selectedDate = picked);
-    }
-  }
-
-  Future<void> _pickTime() async {
-    final now = TimeOfDay.now();
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime ?? now,
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: primaryBlue,
-            onPrimary: Colors.white,
-          ),
-          textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(foregroundColor: primaryBlue),
-          ),
-        ),
-        child: child!,
-      ),
-    );
-    if (picked != null) {
-      setState(() => _selectedTime = picked);
-    }
-  }
-
-  void _submit() {
-    if (_formKey.currentState!.validate() &&
-        _selectedDate != null &&
-        _selectedTime != null) {
-      final timeStr = _selectedTime!.format(context);
-      showDialog(
-        context: context,
-        builder: (_) => ZoomIn(
-          child: AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: Row(
-              children: [
-                const Icon(Icons.check_circle, color: accentGreen, size: 28),
-                const SizedBox(width: 8),
-                Text('¡Cita Guardada!', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
-              ],
-            ),
-            content: Text(
-              'Paciente: ${_nameController.text}\n'
-              'Fecha: ${_formatDate(_selectedDate!)}\n'
-              'Hora: $timeStr\n'
-              'Descripción: ${_descriptionController.text}',
-              style: GoogleFonts.roboto(fontSize: 16),
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: accentGreen,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: const Text('Aceptar', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Completa todos los campos'),
-          backgroundColor: accentRed,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          margin: const EdgeInsets.all(16),
-        ),
-      );
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/'
-        '${date.month.toString().padLeft(2, '0')}/'
-        '${date.year}';
-  }
-
-  Widget _buildField({required String label, required Widget field}) {
-    return FadeInUp(
-      duration: const Duration(milliseconds: 600),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: field,
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Nueva Cita Médica',
-          style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
-        ),
-        backgroundColor: primaryBlue,
-        elevation: 0,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-        ),
-      ),
-      body: FadeIn(
-        duration: const Duration(milliseconds: 500),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                // Nombre del paciente
-                _buildField(
-                  label: 'Nombre del Paciente',
-                  field: TextFormField(
-                    controller: _nameController,
-                    style: GoogleFonts.roboto(fontSize: 18),
-                    decoration: InputDecoration(
-                      hintText: 'Ej. Juan Pérez',
-                      hintStyle: GoogleFonts.roboto(fontSize: 18, color: Colors.grey[600]),
-                      filled: true,
-                      fillColor: cardColor,
-                      prefixIcon: const Icon(Icons.person_outline, color: primaryBlue),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(color: primaryBlue, width: 2),
-                      ),
-                    ),
-                    validator: (v) => v?.trim().isEmpty ?? true ? 'Campo requerido' : null,
-                  ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => UserSearchBloc(
+            searchUsersUseCase: SearchUsersUseCase(
+              UserSearchRepositoryImpl(
+                remoteDataSource: UserSearchRemoteDataSourceImpl(
+                  apiClient: ApiClient(),
                 ),
-                const SizedBox(height: 24),
-
-                Row(
-                  children: [
-                    // DateWidget
-                    DateWidget(
-                      selectedDate: _selectedDate,
-                      onTap: _pickDate,
-                      validator: () => _selectedDate == null ? 'Selecciona una fecha' : null,
-                    ),
-                    const SizedBox(width: 16),
-                    // TimeWidget
-                    TimeWidget(
-                      selectedTime: _selectedTime,
-                      onTap: _pickTime,
-                      validator: () => _selectedTime == null ? 'Selecciona una hora' : null,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-
-                // Descripción
-                _buildField(
-                  label: 'Descripción de la Cita',
-                  field: TextFormField(
-                    controller: _descriptionController,
-                    style: GoogleFonts.roboto(fontSize: 18),
-                    minLines: 4,
-                    maxLines: 6,
-                    decoration: InputDecoration(
-                      hintText: 'Motivo de la consulta, síntomas, etc.',
-                      hintStyle: GoogleFonts.roboto(fontSize: 18, color: Colors.grey[600]),
-                      filled: true,
-                      fillColor: cardColor,
-                      prefixIcon: const Padding(
-                        padding: EdgeInsets.only(top: 16, left: 4),
-                        child: Icon(Icons.note_alt_outlined, color: primaryBlue),
-                      ),
-                      contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(color: primaryBlue, width: 2),
-                      ),
-                    ),
-                    validator: (v) => v?.trim().isEmpty ?? true ? 'Campo requerido' : null,
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElasticIn(
-                        child: ElevatedButton(
-                          onPressed: _submit,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: accentGreen,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                            elevation: 8,
-                            shadowColor: accentGreen.withOpacity(0.4),
-                          ),
-                          child: Text(
-                            'Guardar Cita',
-                            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: ElasticIn(
-                        delay: const Duration(milliseconds: 100),
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: accentRed,
-                            side: const BorderSide(color: accentRed, width: 2),
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          ),
-                          child: Text(
-                            'Cancelar',
-                            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-              ],
+              ),
             ),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => MedicalAppointmentBloc(
+            repository: MedicalAppointmentRepositoryImpl(
+              localDataSource: MedicalAppointmentLocalDataSource(),
+              apiClient: ApiClient(),
+            ),
+          ),
+        ),
+      ],
+      child: BlocListener<MedicalAppointmentBloc, MedicalAppointmentState>(
+        listener: (context, state) {
+          if (state is MedicalAppointmentSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Cita médica guardada exitosamente',
+                  style: GoogleFonts.poppins(),
+                ),
+                backgroundColor: AppColors.accentGreen,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+            setState(() {
+              _selectedElderId = '';
+              _selectedElderName = '';
+              _selectedDate = null;
+              _selectedTime = null;
+              _descriptionController.clear();
+            });
+          } else if (state is MedicalAppointmentSyncSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Citas sincronizadas ✓',
+                  style: GoogleFonts.poppins(),
+                ),
+                backgroundColor: AppColors.accentGreen,
+              ),
+            );
+          } else if (state is MedicalAppointmentFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Error: ${state.error}',
+                  style: GoogleFonts.poppins(),
+                ),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.bgColor,
+          appBar: const CustomAppBar(title: 'Agendar Cita Médica'),
+          body: BlocBuilder<MedicalAppointmentBloc, MedicalAppointmentState>(
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  FadeIn(
+                    duration: const Duration(milliseconds: 500),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: ListView(
+                        children: [
+                          PatientSearchSectionAppointment(
+                            onPatientSelected: _onPatientSelected,
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              DateWidget(
+                                selectedDate: _selectedDate,
+                                onTap: _selectDate,
+                              ),
+                              const SizedBox(width: 16),
+                              TimeWidget(
+                                selectedTime: _selectedTime,
+                                onTap: _selectTime,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          DescriptionField(
+                            controller: _descriptionController,
+                          ),
+                          const SizedBox(height: 32),
+                          SaveAppointmentButton(
+                            isEnabled: _selectedElderId.isNotEmpty &&
+                                _selectedDate != null &&
+                                _selectedTime != null &&
+                                _descriptionController.text.trim().isNotEmpty &&
+                                state is! MedicalAppointmentLoading,
+                            onPressed: () => _saveAppointment(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (state is MedicalAppointmentLoading)
+                    Container(
+                      color: Colors.black26,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ),
