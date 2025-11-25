@@ -38,19 +38,21 @@ class MedicationDto extends Medication {
 
   factory MedicationDto.fromJson(Map<String, dynamic> json) {
     return MedicationDto(
-      medicationId: json['medicationId'],
-      name: json['name'],
-      description: json['description'],
-      dosage: json['dosage'],
-      frequency: json['frequency'],
-      duration: json['duration'],
-      startDate: DateTime.parse(json['startDate']),
+      medicationId: json['medicationId'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      dosage: json['dosage'] ?? '',
+      frequency: json['frequency'] ?? 0,
+      duration: json['duration'] ?? 0,
+      startDate: json['startDate'] != null && json['startDate'] != ''
+          ? DateTime.tryParse(json['startDate']) ?? DateTime.now()
+          : DateTime.now(),
       doctorId: json['doctorId'],
-      elderId: json['elderId'],
+      elderId: json['elderId'] ?? '',
       caregiverId: json['caregiverId'],
       doctorName: json['doctorName'],
       caregiverName: json['caregiverName'],
-      elderName: json['elderName'],
+      elderName: json['elderName'] ?? '',
     );
   }
 

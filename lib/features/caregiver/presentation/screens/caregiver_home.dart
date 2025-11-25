@@ -13,12 +13,13 @@ class CaregiverHome extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            /*
             CardHome(
               title: 'Añadir familiar',
               imagePath: 'assets/images/agregar_familiar.jpg',
               onTap: () {},
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 16),*/
             CardHome(
               title: 'Añadir medicamento',
               imagePath: 'assets/images/tomar_medicamento.jpg',
@@ -27,11 +28,12 @@ class CaregiverHome extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
+            /*
             CardHome(
               title: 'Mensaje rapido',
               imagePath: 'assets/images/mensaje_rapido_op2.jpg',
               onTap: () {},
-            ),
+            ),*/
             const SizedBox(height: 16),
             CardHome(
               title: 'Historial alexa',
@@ -42,7 +44,14 @@ class CaregiverHome extends StatelessWidget {
             CardHome(
               title: 'Historial medicamentos',
               imagePath: 'assets/images/historial_medicamentos.jpg',
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.medicationHistory,
+                  //TODO Esto es un test corregir si usa esa ruta en otra parte
+                  arguments: "0d271773-bb94-4bf2-be7e-c865ecaf25d9",
+                );
+              },
             ),
           ],
         ),

@@ -8,4 +8,7 @@ abstract class MedicationRepository {
   });
 
   Future<void> syncPendingMedications();
+
+  Future<List<Medication>> getMedicationsByUser(String userId);
+  Future<void> deleteMedication(String medicationId);
 }
