@@ -1,13 +1,8 @@
-import 'package:heraguard_frontend/features/MedicalAppointments/data/models/medical_appointment.dart';
+// lib/features/medical_appointments/domain/repositories/medical_appointment_repository.dart
+
+import '../entities/medical_appointment.dart';
 
 abstract class MedicalAppointmentRepository {
-  Future<MedicalAppointment> createMedicalAppointment(MedicalAppointment medicalappointment);
-
-  Future<List<MedicalAppointment>> getMedicalAppointments();
-
-  Future<MedicalAppointment> getMedicalAppointmentById(String medicalAppointmentId);
-
-  Future<MedicalAppointment> updateMedicalAppointment(MedicalAppointment medicalappointment);
-
-  Future<void> deleteMedicalAppointment(String medicalAppointmentId);
+  Future<void> addMedicalAppointment(MedicalAppointment appointment);
+  Future<void> syncPendingAppointments();
 }
