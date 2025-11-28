@@ -1,7 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:permission_handler/permission_handler.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -13,120 +16,126 @@ class NotificationService {
 
   bool _isInitialized = false;
 
-  // Inicializar el servicio
   Future<void> initialize() async {
-    if (_isInitialized) return;
-
-    // Inicializar timezone
     tz.initializeTimeZones();
-    tz.setLocalLocation(
-      tz.getLocation('America/Mexico_City'),
-    ); // Cambia según tu zona
 
-    // Configuración Android
-    const androidSettings = AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
-    );
-
-    // Configuración iOS
-    const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
 
     await _notifications.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: _onNotificationTap,
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+            String? intakeId = notificationResponse.payload;
+            if (intakeId != null && intakeId.isNotEmpty) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                navigatorKey.currentState?.pushNamed(
+                  AppRoutes.medicationIntake,
+                  arguments: intakeId,
+                );
+              });
+            }
+            print('Notificación tocada: ${notificationResponse.payload}');
+          },
     );
+
+    // Pedir permisos para iOS y Android 13+
+    await FirebaseMessaging.instance.requestPermission();
+
+    // Configura presentación de notificaciones en primer plano (iOS)
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
+    //Todo
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
+    if (initialMessage != null) {
+      _handleNotificationNavigation(initialMessage, fromTerminated: true);
+    }
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      _handleNotificationNavigation(message, fromBackground: true);
+    });
+
+    // Escuchar mensajes en foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print(
+        'Mensaje push recibido: ${message.notification?.title} - ${message.notification?.body}',
+      );
+      showNotification(message);
+    });
+
+    // Obtén el FCM token (opcional)
+    String? token = await FirebaseMessaging.instance.getToken();
+    print('FCM Token: $token');
 
     _isInitialized = true;
   }
 
-  // Solicitar permisos
-  Future<bool> requestPermissions() async {
-    if (await Permission.notification.isDenied) {
-      final status = await Permission.notification.request();
-      return status.isGranted;
+  void _handleNotificationNavigation(
+    RemoteMessage message, {
+    bool fromTerminated = false,
+    bool fromBackground = false,
+  }) {
+    String intakeId =
+        message.data['intakeId'] ?? message.data['scheduleId'] ?? '';
+
+    String origin = fromTerminated
+        ? 'terminated'
+        : (fromBackground ? 'background' : 'foreground');
+    print('[DEBUG] Navegando desde $origin con intakeId: $intakeId');
+
+    if (intakeId.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Delay extra si viene de terminated para asegurar que el árbol esté listo
+        final delay = fromTerminated
+            ? Duration(milliseconds: 500)
+            : Duration.zero;
+        Future.delayed(delay, () {
+          navigatorKey.currentState?.pushNamed(
+            AppRoutes.medicationIntake,
+            arguments: intakeId,
+          );
+        });
+      });
     }
-    return true;
   }
 
-  // Programar una notificación específica
-  Future<void> scheduleNotification({
-    required int id,
-    required String title,
-    required String body,
-    required DateTime scheduledDate,
-    String? payload,
-  }) async {
-    await initialize();
+  Future<void> showNotification(RemoteMessage message) async {
+    if (!_isInitialized) return;
 
-    const androidDetails = AndroidNotificationDetails(
-      'medication_channel',
-      'Medicamentos',
-      channelDescription: 'Recordatorios de medicamentos',
-      importance: Importance.high,
-      priority: Priority.high,
-      enableVibration: true,
-      playSound: true,
-    );
+    String intakeId =
+        message.data['intakeId'] ?? message.data['scheduleId'] ?? '';
 
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+    print('[DEBUG]intakeId recibido: $intakeId');
 
-    const details = NotificationDetails(
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+          'default_channel_id',
+          'Default Channel',
+          channelDescription: 'Canal para notificaciones por defecto',
+          importance: Importance.max,
+          priority: Priority.high,
+          playSound: true,
+          ticker: 'ticker',
+        );
+
+    const NotificationDetails platformDetails = NotificationDetails(
       android: androidDetails,
-      iOS: iosDetails,
     );
 
-    try {
-      await _notifications.zonedSchedule(
-        id,
-        title,
-        body,
-        tz.TZDateTime.from(scheduledDate, tz.local),
-        details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: payload,
-      );
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // Cancelar notificación específica
-  Future<void> cancelNotification(int id) async {
-    await _notifications.cancel(id);
-  }
-
-  // Cancelar todas las notificaciones con IDs en un rango
-  Future<void> cancelNotificationRange(int startId, int endId) async {
-    for (int i = startId; i <= endId; i++) {
-      await cancelNotification(i);
-    }
-  }
-
-  // Cancelar todas las notificaciones
-  Future<void> cancelAllNotifications() async {
-    await _notifications.cancelAll();
-  }
-
-  // Ver notificaciones pendientes (para debug)
-  Future<List<PendingNotificationRequest>> getPendingNotifications() async {
-    return await _notifications.pendingNotificationRequests();
-  }
-
-  // Callback cuando se toca una notificación
-  void _onNotificationTap(NotificationResponse response) {
-    // Aquí puedes navegar a una pantalla específica
+    await _notifications.show(
+      message.hashCode,
+      message.notification?.title,
+      message.notification?.body,
+      platformDetails,
+      payload: intakeId,
+    );
   }
 }

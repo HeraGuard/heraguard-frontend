@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/features/MedicalAppointments/presentation/screens/add_medical_appointment.dart';
 import 'package:heraguard_frontend/features/activities/presentation/screens/add_activity.dart';
@@ -19,7 +20,10 @@ import 'package:heraguard_frontend/features/elder/presentation/screens/elder_set
 import 'package:heraguard_frontend/features/elder/presentation/screens/add_elder.dart';
 import 'package:heraguard_frontend/features/elder/presentation/screens/elder_list.dart';
 import 'package:heraguard_frontend/features/medication_history/presentation/screens/medication_history_screen.dart';
+import 'package:heraguard_frontend/features/medications/data/repositories/medication_repository_impl.dart';
+import 'package:heraguard_frontend/features/medications/presentation/bloc/medication_intake_bloc.dart';
 import 'package:heraguard_frontend/features/medications/presentation/screens/add_medication.dart';
+import 'package:heraguard_frontend/features/medications/presentation/screens/medication_intake_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -67,6 +71,23 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const ElderProfile());
       case AppRoutes.splash:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
+      case AppRoutes.medicationIntake:
+        final intakeId = settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (context) {
+            final repository = RepositoryProvider.of<MedicationRepositoryImpl>(
+              context,
+            );
+            return BlocProvider(
+              create: (_) =>
+                  MedicationIntakeBloc(repository: repository)
+                    ..add(LoadIntake(intakeId)),
+              child: MedicationIntakeScreen(intakeId: intakeId),
+            );
+          },
+          settings: settings,
+        );
+
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

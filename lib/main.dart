@@ -1,15 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:heraguard_frontend/core/injection/container.dart';
+import 'package:heraguard_frontend/core/network/api_client.dart';
 import 'package:heraguard_frontend/core/providers/app_provider.dart';
 import 'package:heraguard_frontend/core/providers/auth_provider.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/routes/route_generator.dart';
 import 'package:heraguard_frontend/core/services/notification_service.dart';
 import 'package:heraguard_frontend/core/storage/secure_storage.dart';
+import 'package:heraguard_frontend/features/medications/data/datasources/medication_local_data_source.dart';
+import 'package:heraguard_frontend/features/medications/data/repositories/medication_repository_impl.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await InjectionContainer.initialize();
   runApp(const AppProviders());
   await NotificationService().initialize();
@@ -26,6 +32,12 @@ class AppProviders extends StatelessWidget {
           create: (_) => AuthProvider(sl<SecureStorage>()),
         ),
         ChangeNotifierProvider(create: (_) => AppProvider()),
+        RepositoryProvider<MedicationRepositoryImpl>(
+          create: (_) => MedicationRepositoryImpl(
+            localDataSource: MedicationLocalDataSource(),
+            apiClient: ApiClient(),
+          ),
+        ),
       ],
       child: const HeraGuard(),
     );
@@ -37,6 +49,7 @@ class HeraGuard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Flutter Demo',
       theme: ThemeData(
         primaryColor: Colors.blue,

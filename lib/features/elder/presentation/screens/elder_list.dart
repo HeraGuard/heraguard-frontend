@@ -55,7 +55,14 @@ class __ElderListBodyState extends State<_ElderListBody> {
       final userId = authProvider.authData?.user.id;
       final userType = authProvider.authData?.user.role;
       final int typeId = _convertRoleToTypeId(userType);
-      context.read<ElderBloc>().add(LoadEldersByUser(userId!, typeId));
+      if (userId != null) {
+        context.read<ElderBloc>().add(LoadEldersByUser(userId, typeId));
+      } else {
+        // Opcional: muestra error o espera autenticación
+        print('El usuario no está autenticado aún.');
+      }
+      /*
+      context.read<ElderBloc>().add(LoadEldersByUser(userId!, typeId));*/
     });
   }
 
@@ -116,7 +123,10 @@ class __ElderListBodyState extends State<_ElderListBody> {
       itemBuilder: (context, index) {
         final elder = elders[index];
         return ListTile(
-          leading: CircleAvatar(backgroundColor: Colors.grey.shade300,child: Icon(Icons.person, color: Colors.blue,),),
+          leading: CircleAvatar(
+            backgroundColor: Colors.grey.shade300,
+            child: Icon(Icons.person, color: Colors.blue),
+          ),
           title: Text('${elder.name} ${elder.lastName}'),
           subtitle: Text(elder.email),
           onTap: () {},
