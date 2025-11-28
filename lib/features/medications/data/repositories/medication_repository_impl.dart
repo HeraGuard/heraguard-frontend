@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:heraguard_frontend/core/network/api_client.dart';
 import 'package:heraguard_frontend/core/network/endpoints.dart';
-import 'package:heraguard_frontend/core/services/medication_notification_scheduler.dart';
+import 'package:heraguard_frontend/features/medications/data/models/medication_intake_dto.dart';
+import 'package:heraguard_frontend/features/medications/domain/entities/medication_intake.dart';
 import '../../domain/entities/medication.dart';
 import '../../domain/repositories/medication_repository.dart';
 import '../datasources/medication_local_data_source.dart';
@@ -11,8 +12,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 class MedicationRepositoryImpl implements MedicationRepository {
   final MedicationLocalDataSource localDataSource;
   final ApiClient apiClient;
+  /*
   final MedicationNotificationScheduler _notificationScheduler =
-      MedicationNotificationScheduler();
+      MedicationNotificationScheduler();*/
 
   MedicationRepositoryImpl({
     required this.localDataSource,
@@ -56,9 +58,9 @@ class MedicationRepositoryImpl implements MedicationRepository {
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           for (var medication in medications) {
-            await _notificationScheduler.scheduleMedicationNotifications(
+            /*await _notificationScheduler.scheduleMedicationNotifications(
               medication,
-            );
+            );*/
 
             await localDataSource.deleteAllTempByNameAndElder(
               name: medication.name,
@@ -103,9 +105,9 @@ class MedicationRepositoryImpl implements MedicationRepository {
 
       final dto = MedicationDto.fromDomain(medWithElder);
       await localDataSource.insertMedicationAsPending(dto);
-      await _notificationScheduler.scheduleMedicationNotifications(
+      /*await _notificationScheduler.scheduleMedicationNotifications(
         medWithElder,
-      );
+      );*/
     }
   }
 
@@ -199,7 +201,7 @@ class MedicationRepositoryImpl implements MedicationRepository {
   @override
   Future<void> deleteMedication(String medicationId) async {
     try {
-      await _notificationScheduler.cancelMedicationNotifications(medicationId);
+      //await _notificationScheduler.cancelMedicationNotifications(medicationId);
 
       if (medicationId.startsWith('temp_')) {
         await localDataSource.deleteMedication(medicationId);
@@ -215,5 +217,43 @@ class MedicationRepositoryImpl implements MedicationRepository {
       debugPrint('Error al eliminar medicamento: $e');
       rethrow;
     }
+  }
+
+  @override
+  Future<void> confirmIntake({
+    required String intakeId,
+    required DateTime actualTime,
+    required String userId,
+    String? notes,
+  }) async {
+    await apiClient.post('/api/medication-intake/confirm', {
+      'ScheduleId': intakeId,
+      'ActualTime': actualTime.toIso8601String(),
+      'ConfirmedByUserId': userId,
+      'Notes': notes,
+    });
+  }
+
+  @override
+  Future<void> skipIntake({
+    required String intakeId,
+    required String userId,
+    String? reason,
+  }) async {
+    await apiClient.post('/api/medication-intake/skip', {
+      'ScheduleId': intakeId,
+      'UserId': userId,
+      'Reason': reason,
+    });
+  }
+
+  @override
+  Future<MedicationIntake> getIntakeById(String intakeId) async {
+    final response = await apiClient.get('/api/medication-intake/$intakeId');
+
+    if (response.statusCode == 200) {
+      return MedicationIntakeDto.fromJson(response.data);
+    }
+    throw Exception('No se encontró la toma');
   }
 }
