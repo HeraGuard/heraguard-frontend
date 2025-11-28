@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:heraguard_frontend/core/storage/secure_storage_impl.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiClient {
   late final Dio _dio;
+  final SecureStorageImpl _secureStorage = SecureStorageImpl();
 
   ApiClient() {
     _dio = Dio(
@@ -12,6 +14,26 @@ class ApiClient {
             'https://heraguard-hahfe0h7h5bcg0dh.canadacentral-01.azurewebsites.net',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
+      ),
+    );
+
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = await _secureStorage.read(key: 'access_token');
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          return handler.next(options);
+        },
+        onError: (DioException error, handler) async {
+          // Opcional: Manejar 401 Unauthorized
+          if (error.response?.statusCode == 401) {
+            print('Token inválido o expirado');
+            // Aquí podrías limpiar el storage y navegar a login
+          }
+          return handler.next(error);
+        },
       ),
     );
 
