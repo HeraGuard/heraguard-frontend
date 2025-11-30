@@ -14,4 +14,7 @@ class Endpoints {
   // User search
   static const String searchUsers = '/api/User/search';
   static const String relationshipElder = '/api/Relationship';
+
+  // Notifications
+  static const String deviceToken = '/api/users';
 }
