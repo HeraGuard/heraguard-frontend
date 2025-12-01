@@ -9,6 +9,7 @@ import 'package:heraguard_frontend/core/routes/app_routes.dart';
 import 'package:heraguard_frontend/core/routes/route_generator.dart';
 import 'package:heraguard_frontend/core/services/notification_service.dart';
 import 'package:heraguard_frontend/core/storage/secure_storage.dart';
+import 'package:heraguard_frontend/features/elder/domain/repositories/elder_repository.dart';
 import 'package:heraguard_frontend/features/medications/data/datasources/medication_local_data_source.dart';
 import 'package:heraguard_frontend/features/medications/data/repositories/medication_repository_impl.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,9 @@ class AppProviders extends StatelessWidget {
             localDataSource: MedicationLocalDataSource(),
             apiClient: ApiClient(),
           ),
+        ),
+        RepositoryProvider<ElderRepository>(
+          create: (_) => sl<ElderRepository>(),
         ),
       ],
       child: const HeraGuard(),

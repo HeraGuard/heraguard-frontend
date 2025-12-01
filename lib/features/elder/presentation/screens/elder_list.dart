@@ -52,8 +52,8 @@ class __ElderListBodyState extends State<_ElderListBody> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final userId = authProvider.authData?.user.id;
-      final userType = authProvider.authData?.user.role;
+      final userId = authProvider.userId;
+      final userType = authProvider.userRole;
       final int typeId = _convertRoleToTypeId(userType);
       if (userId != null) {
         context.read<ElderBloc>().add(LoadEldersByUser(userId, typeId));
