@@ -30,4 +30,5 @@ class AppRoutes {
 
   //Notification
   static const String medicationIntake = '/medication-intake';
+  static const String sosAlert = '/sos-alert';
 }

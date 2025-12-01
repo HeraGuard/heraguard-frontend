@@ -17,9 +17,9 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotificationService().initialize();
   await InjectionContainer.initialize();
   runApp(const AppProviders());
-  await NotificationService().initialize();
 }
 
 class AppProviders extends StatelessWidget {

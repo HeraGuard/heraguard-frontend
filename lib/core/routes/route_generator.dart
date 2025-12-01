@@ -7,6 +7,7 @@ import 'package:heraguard_frontend/features/auth/presentation/screens/login_scre
 import 'package:heraguard_frontend/features/auth/presentation/screens/register_screen.dart';
 import 'package:heraguard_frontend/features/auth/presentation/screens/splash_screen.dart';
 import 'package:heraguard_frontend/features/caregiver/presentation/screens/caregiver_home.dart';
+import 'package:heraguard_frontend/features/caregiver/presentation/screens/sos_alert_screen.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_chats.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_home.dart';
 import 'package:heraguard_frontend/features/doctor/presentation/screens/doctor_notifications.dart';
@@ -87,7 +88,14 @@ class RouteGenerator {
           },
           settings: settings,
         );
-
+      case AppRoutes.sosAlert:
+        final args = settings.arguments as Map<String, dynamic>;
+        final elderId = args['elderId'] as String? ?? '';
+        final sosId = args['sosId'] as String? ?? '';
+        return MaterialPageRoute(
+          builder: (_) => SosAlertScreen(elderId: elderId, sosId: sosId),
+          settings: settings,
+        );
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }

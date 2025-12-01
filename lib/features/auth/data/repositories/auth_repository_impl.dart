@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:heraguard_frontend/core/network/api_client.dart';
 import 'package:heraguard_frontend/core/network/endpoints.dart';
 import 'package:heraguard_frontend/core/storage/secure_storage.dart';
@@ -24,10 +25,18 @@ class AuthRepositoryImpl implements AuthRepository {
       value: authResponse.accessToken,
     );
 
-    await _secureStorage.write( 
-      key: 'user_role',
-      value: authResponse.user.role,
-    );
+    await _secureStorage.write(key: 'user_role', value: authResponse.user.role);
+
+    // Token firebase
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    print('FCM Token: $fcmToken');
+
+    if (fcmToken != null) {
+      await _apiClient.post(
+        '${Endpoints.deviceToken}/${authResponse.user.id}/device-token',
+        {'deviceToken': fcmToken, 'platform': 'android'},
+      );
+    }
 
     return authResponse;
   }
