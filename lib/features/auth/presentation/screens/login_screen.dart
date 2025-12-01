@@ -84,7 +84,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
       context.read<AuthProvider>().setAuthData(response);
-
+      
+      await context.read<AuthProvider>().saveSession(
+        response.accessToken,
+        response.user.id,
+        response.user.role,
+      );
+        
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
