@@ -37,14 +37,11 @@ class NotificationService {
                 );
               });
             }
-            print('Notificación tocada: ${notificationResponse.payload}');
           },
     );
 
-    // Pedir permisos para iOS y Android 13+
     await FirebaseMessaging.instance.requestPermission();
 
-    // Configura presentación de notificaciones en primer plano (iOS)
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
           alert: true,
@@ -63,17 +60,31 @@ class NotificationService {
       _handleNotificationNavigation(message, fromBackground: true);
     });
 
-    // Escuchar mensajes en foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(
-        'Mensaje push recibido: ${message.notification?.title} - ${message.notification?.body}',
-      );
+      final type = message.data['type'] ?? '';
+
+      if (type == 'sos') {
+        final elderId = message.data['elderId'] ?? '';
+        final sosId = message.data['sosId'] ?? '';
+
+        if (navigatorKey.currentState != null &&
+            navigatorKey.currentState!.mounted) {
+          navigatorKey.currentState!.pushNamed(
+            AppRoutes.sosAlert,
+            arguments: <String, dynamic>{'elderId': elderId, 'sosId': sosId},
+          );
+        } else {
+          // Fallback: mostrar diálogo overlay
+          _showSosOverlay(elderId, sosId);
+        }
+
+        return;
+      }
+
       showNotification(message);
     });
 
-    // Obtén el FCM token (opcional)
     String? token = await FirebaseMessaging.instance.getToken();
-    print('FCM Token: $token');
 
     _isInitialized = true;
   }
@@ -83,13 +94,32 @@ class NotificationService {
     bool fromTerminated = false,
     bool fromBackground = false,
   }) {
+    final type = message.data['type'] ?? '';
+
+    if (type == 'sos') {
+      final elderId = message.data['elderId'] ?? '';
+      final sosId = message.data['sosId'] ?? '';
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final delay = fromTerminated
+            ? const Duration(milliseconds: 500)
+            : Duration.zero;
+        Future.delayed(delay, () {
+          navigatorKey.currentState?.pushNamed(
+            AppRoutes.sosAlert,
+            arguments: <String, dynamic>{'elderId': elderId, 'sosId': sosId},
+          );
+        });
+      });
+      return;
+    }
+
     String intakeId =
         message.data['intakeId'] ?? message.data['scheduleId'] ?? '';
 
     String origin = fromTerminated
         ? 'terminated'
         : (fromBackground ? 'background' : 'foreground');
-    print('[DEBUG] Navegando desde $origin con intakeId: $intakeId');
 
     if (intakeId.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -110,20 +140,37 @@ class NotificationService {
   Future<void> showNotification(RemoteMessage message) async {
     if (!_isInitialized) return;
 
+    final type = message.data['type'] ?? '';
+
+    if (type == 'sos') {
+      return;
+    }
+
     String intakeId =
         message.data['intakeId'] ?? message.data['scheduleId'] ?? '';
 
-    print('[DEBUG]intakeId recibido: $intakeId');
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'default_channel_id', // id
+      'Medication Alerts', // name
+      description: 'Notificaciones de medicamentos y recordatorios',
+      importance: Importance.high,
+    );
+
+    await _notifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(channel);
 
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
           'default_channel_id',
-          'Default Channel',
-          channelDescription: 'Canal para notificaciones por defecto',
+          'Medication Alerts',
+          channelDescription: 'Notificaciones de medicamentos y recordatorios',
           importance: Importance.max,
           priority: Priority.high,
+          icon: '@mipmap/ic_launcher',
           playSound: true,
-          ticker: 'ticker',
         );
 
     const NotificationDetails platformDetails = NotificationDetails(
@@ -131,11 +178,75 @@ class NotificationService {
     );
 
     await _notifications.show(
-      message.hashCode,
-      message.notification?.title,
+      DateTime.now().millisecondsSinceEpoch.remainder(100000),
+      message.notification?.title ?? 'Recordatorio',
       message.notification?.body,
       platformDetails,
       payload: intakeId,
     );
   }
+}
+
+void _showSosOverlay(String elderId, String sosId) {
+  // Crear overlay para mostrar SOS incluso sin Navigator listo
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    OverlayEntry? overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => Material(
+        color: Colors.black54,
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.red.shade900,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.warning, size: 60, color: Colors.white),
+                SizedBox(height: 16),
+                Text(
+                  '🚨 ALERTA SOS',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text('Elder: $elderId', style: TextStyle(color: Colors.white)),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.red,
+                  ),
+                  onPressed: () {
+                    overlayEntry?.remove();
+                    // Intentar navegar una vez más
+                    if (navigatorKey.currentState?.mounted == true) {
+                      navigatorKey.currentState!.pushNamed(
+                        AppRoutes.sosAlert,
+                        arguments: <String, dynamic>{
+                          'elderId': elderId,
+                          'sosId': sosId,
+                        },
+                      );
+                    }
+                  },
+                  child: Text('Aceptar'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(WidgetsBinding.instance.rootElement!)?.insert(overlayEntry!);
+
+    // Auto cerrar después de 10s
+    Future.delayed(Duration(seconds: 10), () => overlayEntry?.remove());
+  });
 }
