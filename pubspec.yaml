@@ -54,6 +54,7 @@ dependencies:
   persistent_bottom_nav_bar: ^6.2.1
   firebase_messaging: ^16.0.4
   firebase_core: ^4.2.1
+  firebase_database: ^12.1.0
 
 
 dev_dependencies:

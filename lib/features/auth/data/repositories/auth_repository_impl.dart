@@ -32,10 +32,10 @@ class AuthRepositoryImpl implements AuthRepository {
     print('FCM Token: $fcmToken');
 
     if (fcmToken != null) {
-      await _apiClient.post(
-        '${Endpoints.deviceToken}/${authResponse.user.id}/device-token',
-        {'deviceToken': fcmToken, 'platform': 'android'},
-      );
+      // await _apiClient.post(
+      //   '${Endpoints.deviceToken}/${authResponse.user.id}/device-token',
+      //   {'deviceToken': fcmToken, 'platform': 'android'},
+      // );
     }
 
     return authResponse;

@@ -28,7 +28,7 @@ class ElderRemoteDataSourceImpl implements ElderRemoteDataSources {
     String relatedUserId,
     int userType,
   ) async {
-    await apiClient.post(Endpoints.linkElder, {
+    await apiClient.post(Endpoints.relationshipElder, {
       'linkingCode': linkingCode,
       'relatedUserId': relatedUserId,
       'relationshipTypeId': userType,
