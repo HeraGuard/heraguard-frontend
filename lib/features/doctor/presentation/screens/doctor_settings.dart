@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heraguard_frontend/core/routes/route_utils.dart';
+import 'package:heraguard_frontend/core/widgets/logout_button.dart';
 import 'package:heraguard_frontend/core/widgets/navbar_bottom.dart';
 
 class DoctorSettings extends StatelessWidget {
@@ -11,15 +11,11 @@ class DoctorSettings extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Doctor Ajustes'),
-            ElevatedButton(
-              onPressed: () => {RouteUtils.logout(context)},
-              child: Text('Adios'),
-            ),
-          ],
+          children: [Text('Doctor Ajustes')],
         ),
       ),
+      floatingActionButton: LogoutButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: NavbarBottom(),
     );
   }

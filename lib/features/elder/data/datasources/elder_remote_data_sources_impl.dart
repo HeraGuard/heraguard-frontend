@@ -14,12 +14,16 @@ class ElderRemoteDataSourceImpl implements ElderRemoteDataSources {
       '${Endpoints.getEldersByUser}/$userId',
       queryParameters: {'typeId': userType},
     );
-
     final List relationships = response.data as List;
-
-    return relationships
-        .map((rel) => ElderModel.fromJson(rel['elder']))
-        .toList();
+    return relationships.map((rel) {
+      final elderId = rel['elder']?['id']?.toString();
+      final relatedUserId = rel['relatedUser']?['id']?.toString();
+      print('Processing: Elder=$elderId, Related=$relatedUserId, User=$userId');
+      final isUserElder = elderId == userId;
+      final otherPerson = isUserElder ? rel['relatedUser'] : rel['elder'];
+      print('IsUserElder: $isUserElder, OtherPerson: ${otherPerson['name']}');
+      return ElderModel.fromJson(otherPerson);
+    }).toList();
   }
 
   @override
@@ -28,7 +32,7 @@ class ElderRemoteDataSourceImpl implements ElderRemoteDataSources {
     String relatedUserId,
     int userType,
   ) async {
-    await apiClient.post(Endpoints.linkElder, {
+    await apiClient.post(Endpoints.relationshipElder, {
       'linkingCode': linkingCode,
       'relatedUserId': relatedUserId,
       'relationshipTypeId': userType,

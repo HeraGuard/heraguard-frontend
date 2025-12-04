@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heraguard_frontend/core/extensions/auth_context.dart';
 import 'package:heraguard_frontend/core/routes/app_routes.dart';
-import 'package:heraguard_frontend/core/routes/route_utils.dart';
 import 'package:heraguard_frontend/core/widgets/appbar_widget.dart';
+import 'package:heraguard_frontend/core/widgets/logout_button.dart';
 import 'package:heraguard_frontend/core/widgets/navbar_bottom.dart';
 import 'package:heraguard_frontend/core/constants/app_colors.dart';
 
@@ -28,15 +28,7 @@ class ElderSettings extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => RouteUtils.logout(context),
-        backgroundColor: Colors.red,
-        icon: const Icon(Icons.logout, color: Colors.white),
-        label: const Text(
-          'Cerrar Sesión',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
+      floatingActionButton: LogoutButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: NavbarBottom(),
     );
