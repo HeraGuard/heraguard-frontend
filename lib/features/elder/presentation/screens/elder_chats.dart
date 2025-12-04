@@ -48,14 +48,12 @@ class __ElderChatsBodyState extends State<_ElderChatsBody> {
   void _loadDoctors() {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final userId = authProvider.authData?.user.id;
-
-    print('=== LOADING ELDER CHATS ===');
-    print('UserId: $userId');
-    print(
-      'Type: $_selectedType (${_selectedType == 2 ? 'Caregivers' : 'Doctors'})',
-    );
-
     context.read<ElderBloc>().add(LoadEldersByUser(userId!, _selectedType));
+  }
+
+  String _generateConversationId(String user1Id, String user2Id) {
+    final sortedIds = [user1Id, user2Id]..sort();
+    return '${sortedIds[0]}_${sortedIds[1]}';
   }
 
   @override
@@ -100,14 +98,11 @@ class __ElderChatsBodyState extends State<_ElderChatsBody> {
         Expanded(
           child: BlocBuilder<ElderBloc, ElderState>(
             builder: (context, state) {
-              print('=== ELDER CHATS STATE: $state ===');
-
               if (state is ElderLoading) {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is ElderError) {
                 return _buildEmptyState('Error: ${state.message}');
               } else if (state is ElderLoaded) {
-                print('=== ELDERS RECEIVED: ${state.elders.length} ===');
                 if (state.elders.isEmpty) {
                   return _buildEmptyState(
                     'No tienes ${_selectedType == 2 ? 'cuidadores' : 'doctores'} asignados',
@@ -160,9 +155,12 @@ class __ElderChatsBodyState extends State<_ElderChatsBody> {
       itemBuilder: (context, index) {
         final doctor = doctors[index];
         if (doctor.id == currentUserId) {
-          print('=== ERROR: Mostrando usuario actual en lugar del doctor ===');
           return Container();
         }
+        final conversationId = _generateConversationId(
+          currentUserId,
+          doctor.id,
+        );
 
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -181,7 +179,34 @@ class __ElderChatsBodyState extends State<_ElderChatsBody> {
               '${doctor.name} ${doctor.lastName}',
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-            subtitle: Text(doctor.email),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(doctor.email),
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _selectedType == 2
+                        ? Colors.orange.shade50
+                        : Colors.green.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    _selectedType == 2 ? 'Cuidador' : 'Doctor',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: _selectedType == 2
+                          ? Colors.orange.shade700
+                          : Colors.green.shade700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             trailing: const Icon(Icons.chat, color: Colors.blue),
             onTap: () {
               Navigator.push(
@@ -194,7 +219,7 @@ class __ElderChatsBodyState extends State<_ElderChatsBody> {
                         id: doctor.id,
                         fullName: '${doctor.name} ${doctor.lastName}',
                         email: doctor.email,
-                        conversationId: '',
+                        conversationId: conversationId,
                       ),
                       currentUserId: currentUserId,
                     ),

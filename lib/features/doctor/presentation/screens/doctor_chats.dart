@@ -57,6 +57,11 @@ class __DoctorChatsBodyState extends State<_DoctorChatsBody> {
     }
   }
 
+  String _generateConversationId(String user1Id, String user2Id) {
+    final sortedIds = [user1Id, user2Id]..sort();
+    return '${sortedIds[0]}_${sortedIds[1]}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ElderBloc, ElderState>(
@@ -100,6 +105,9 @@ class __DoctorChatsBodyState extends State<_DoctorChatsBody> {
       itemCount: elders.length,
       itemBuilder: (context, index) {
         final elder = elders[index];
+
+        final conversationId = _generateConversationId(currentUserId, elder.id);
+
         return ListTile(
           leading: CircleAvatar(
             backgroundColor: Colors.grey.shade300,
@@ -118,7 +126,7 @@ class __DoctorChatsBodyState extends State<_DoctorChatsBody> {
                       id: elder.id,
                       fullName: '${elder.name} ${elder.lastName}',
                       email: elder.email,
-                      conversationId: '${currentUserId}_${elder.id}',
+                      conversationId: conversationId,
                     ),
                     currentUserId: currentUserId,
                   ),

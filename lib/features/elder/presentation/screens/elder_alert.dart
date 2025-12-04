@@ -19,7 +19,7 @@ class ElderAlert extends StatelessWidget {
               style: TextStyle(
                 fontSize: 38,
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: Color.fromARGB(255, 255, 17, 0),
                 letterSpacing: 2,
               ),
             ),
@@ -41,7 +41,7 @@ class ElderAlert extends StatelessWidget {
               width: 200,
               height: 200,
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: Color.fromARGB(255, 255, 17, 0),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(

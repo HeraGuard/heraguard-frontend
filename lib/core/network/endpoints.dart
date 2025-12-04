@@ -16,6 +16,8 @@ class Endpoints {
   static const String searchUsers = '/api/User/search';
   static const String relationshipElder = '/api/Relationship';
 
+  static const String deviceToken = '/api/users';
+
   // Chat
   static const String sendMessage = '/api/Chat/send';
   static const String getConversation = '/api/Chat/conversation';
